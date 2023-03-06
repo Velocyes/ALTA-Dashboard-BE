@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 
 	"alta-dashboard-be/app/config"
+	_classMdl "alta-dashboard-be/features/class/models"
+	_menteeMdl "alta-dashboard-be/features/mentee/models"
 	_userData "alta-dashboard-be/features/users/data"
 )
 
@@ -25,5 +27,5 @@ func InitDB(cfg config.AppConfig) *gorm.DB {
 }
 
 func InitialMigration(db *gorm.DB) {
-	db.AutoMigrate(&_userData.User{})
+	db.AutoMigrate(&_userData.User{}, &_classMdl.Class{}, &_menteeMdl.Emergency{}, &_menteeMdl.Education{}, &_menteeMdl.Mentee{})
 }

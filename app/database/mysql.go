@@ -7,8 +7,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"immersive-dashboard-app/app/config"
-	_userData "immersive-dashboard-app/features/users/data"
+	"alta-dashboard-be/app/config"
+	_userData "alta-dashboard-be/features/users/data"
 )
 
 func InitDB(cfg config.AppConfig) *gorm.DB {

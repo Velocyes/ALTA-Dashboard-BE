@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	"immersive-dashboard-app/features/users"
+	"alta-dashboard-be/features/users"
 )
 
 type UserResponse struct {

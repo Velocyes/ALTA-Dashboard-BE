@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"errors"
-	"immersive-dashboard-app/app/config"
-	"immersive-dashboard-app/utils/consts"
+	"alta-dashboard-be/app/config"
+	"alta-dashboard-be/utils/consts"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"

@@ -1,10 +1,10 @@
 package delivery
 
 import (
-	"immersive-dashboard-app/features/users"
-	"immersive-dashboard-app/middlewares"
-	"immersive-dashboard-app/utils/consts"
-	"immersive-dashboard-app/utils/helper"
+	"alta-dashboard-be/features/users"
+	"alta-dashboard-be/middlewares"
+	"alta-dashboard-be/utils/consts"
+	"alta-dashboard-be/utils/helper"
 	"net/http"
 	"strconv"
 

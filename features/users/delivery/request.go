@@ -1,6 +1,6 @@
 package delivery
 
-import "immersive-dashboard-app/features/users"
+import "alta-dashboard-be/features/users"
 
 type UserRequest struct {
 	Id       uint   `json:"id"`

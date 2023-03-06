@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"immersive-dashboard-app/features/users"
-	"immersive-dashboard-app/utils/consts"
+	"alta-dashboard-be/features/users"
+	"alta-dashboard-be/utils/consts"
 	"strings"
 
 	"github.com/go-playground/validator/v10"

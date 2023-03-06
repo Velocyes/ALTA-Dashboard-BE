@@ -34,18 +34,21 @@ paths:
                   status: "success"
                   message: "succesfully read user data"
                   data:
-                    - id: 1
-                      name: "Admin"
-                      email: "Admin@gmail.com"
-                      team: "Mentor"
-                      role: "Admin"
-                      status: "Active"
-                    - id: 2
-                      name: "User"
-                      email: "User@gmail.com"
-                      team: "Mentor"
-                      role: "User"
-                      status: "Active"
+                    total_page: 2
+                    page: 1
+                    data:
+                      - id: 1
+                        name: "Admin"
+                        email: "Admin@gmail.com"
+                        team: "Mentor"
+                        role: "Admin"
+                        status: "Active"
+                      - id: 2
+                        name: "User"
+                        email: "User@gmail.com"
+                        team: "Mentor"
+                        role: "User"
+                        status: "Active"
         '500':
           $ref: '#/components/responses/500'
 

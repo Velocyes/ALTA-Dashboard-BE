@@ -2,9 +2,9 @@ package data
 
 import (
 	"errors"
-	"immersive-dashboard-app/features/users"
-	"immersive-dashboard-app/middlewares"
-	"immersive-dashboard-app/utils/consts"
+	"alta-dashboard-be/features/users"
+	"alta-dashboard-be/middlewares"
+	"alta-dashboard-be/utils/consts"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"

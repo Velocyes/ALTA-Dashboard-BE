@@ -3,7 +3,7 @@ package data
 import (
 	"gorm.io/gorm"
 
-	"immersive-dashboard-app/features/users"
+	"alta-dashboard-be/features/users"
 )
 
 type User struct {

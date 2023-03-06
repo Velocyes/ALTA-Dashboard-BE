@@ -1,10 +1,10 @@
 package router
 
 import (
-	_userData "immersive-dashboard-app/features/users/data"
-	_userHandler "immersive-dashboard-app/features/users/delivery"
-	_userService "immersive-dashboard-app/features/users/service"
-	"immersive-dashboard-app/middlewares"
+	_userData "alta-dashboard-be/features/users/data"
+	_userHandler "alta-dashboard-be/features/users/delivery"
+	_userService "alta-dashboard-be/features/users/service"
+	"alta-dashboard-be/middlewares"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"

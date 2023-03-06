@@ -1,0 +1,465 @@
+openapi: '3.0.2'
+info:
+  title: Immersive Dashboard App API
+  version: '1.0'
+servers:
+  - url: https://api.server.test/v1
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: get all users
+      description: Get all users data
+      parameters:
+        - name: "page"
+          in: query
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          description: "Limit data per page"
+          in: query
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Succress reponse with return of list of user datas
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully read user data"
+                  data:
+                    - id: 1
+                      name: "Admin"
+                      email: "Admin@gmail.com"
+                      team: "Mentor"
+                      role: "Admin"
+                      status: "Active"
+                    - id: 2
+                      name: "User"
+                      email: "User@gmail.com"
+                      team: "Mentor"
+                      role: "User"
+                      status: "Active"
+        '500':
+          $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - Users
+      security:
+        - JWTAuth: []
+      summary: add user
+      description: Register user
+      parameters:
+        - name: "full_name"
+          description: "User's full name"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "Joko"
+        - name: email
+          description: "User's email"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "Joko@gmail.com"
+        - name: password
+          description: "User's account password"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "qwerty"
+        - name: team
+          description: "User's account in Alterra"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "Mentor"
+        - name: role
+          description: "User's account role"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "User"
+        - name: status
+          description: "User's account status"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "Active"
+      requestBody:
+        required: true
+        content:
+          application/form-data:
+            schema:
+              type: object
+              example:
+                name: "Joko"
+                email: "Joko@gmail.com"
+                password: "qwerty"
+
+      responses:
+        '201':
+          description: Succeed register
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully insert user data"
+                  data: 
+                    - id: 1
+                      name: "Joko"
+                      email: "Joko@gmail.com"
+                      team: "Mentor"
+                      role: "User"
+                      status: "Active"
+                  
+        '400':
+          $ref: '#/components/responses/400'
+          
+        '500':
+          $ref: '#/components/responses/500'
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: login
+      description: Login with email and password
+      parameters:
+        - name: email
+          description: "User's email"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "Joko@gmail.com"
+        - name: password
+          description: "User's account password"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "qwerty"
+        
+      requestBody:
+        required: true
+        content:
+          application/form-data:
+            schema:
+              type: object
+              example:
+                email: "Joko@gmail.com"
+                password: "qwerty"
+
+      responses:
+        '200':
+          description: Success response with return of user data and generated token
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "login succeed"
+                  data:
+                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzgwNjU5NDAsInJvbGUiOiJVc2VyIiwidXNlcklkIjoxfQ.MKTdYMbY6awM0s8_A3fauSV2RjuTBaohfTslkZ0UkWk"
+                    data:
+                      - id: 1
+                        name: "Joko"
+                        email: "Joko@gmail.com"
+                        team: "Admission"
+                        role: "Admin"
+                        status: "Active"
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /users/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: get user
+      description: Get user's data by id
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: user_id
+          description: "User's id of the user you want to search for"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+        '200':
+          description: Success response with return of an user data
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully read user data"
+                  data:
+                    - id: 1
+                      name: "Joko"
+                      email: "Joko@gmail.com"
+                      team: "Mentor"
+                      role: "User"
+                      status: "Active"
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+    put:
+      tags:
+        - Users
+      summary: update user by id
+      description: Update user's data by id
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: "full_name"
+          description: "User's full name"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "Joko"
+        - name: email
+          description: "User's email"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "Joko@gmail.com"
+        - name: password
+          description: "User's account password"
+          required: true
+          in: query
+          schema:
+            type: string
+            example: "qwerty"
+        - name: team
+          description: "User's account in Alterra"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "Mentor"
+        - name: role
+          description: "User's account role"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "User"
+        - name: status
+          description: "User's account status"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "Active"
+      requestBody:
+        required: true
+        content:
+          application/form-data:
+            schema:
+              type: object
+              example:
+                name: "Joko"
+                email: "Joko@gmail.com"
+                team: "Admission"
+                role: "Admin"
+                status: "Active"
+
+      responses:
+        '204':
+          description: Success response with return of updated data
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully update user data"
+                  data:
+                  - id: 1
+                    name: "Joko"
+                    email: "Joko@gmail.com"
+                    team: "Admission"
+                    role: "Admin"
+                    status: "Active"
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags:
+        - Users
+      summary: delete user
+      description: Delete user by id
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: user_id
+          description: "User's id of the user you want to delete for"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
+
+      responses:
+        '200':
+          description: Success response for deleting user
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully delete user"
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+####################################
+#  COMPONENTS
+####################################
+components:
+  securitySchemes:
+      JWTAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+        description: "JWT Token"
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint
+        full_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        team:
+          type: string
+          enum:
+            - Mentor
+            - Placement
+            - People
+            - Admission
+            - Academic
+        role:
+          type: string
+          enum:
+            - User
+            - Admin
+        status:
+          type: string
+          enum:
+            - 'Active'
+            - 'Not-Active'
+            - 'Deleted'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ResponseWithData:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          
+    ResponseWithoutData:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+          
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ResponseWithoutData'
+          example:
+            status: "failed"
+            message: "{{any message}}"
+
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ResponseWithoutData'
+          example:
+            status: "success"
+            message: "{{any message}}"
+
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ResponseWithoutData'
+          example:
+            status: "failed"
+            message: "{{any message}}"

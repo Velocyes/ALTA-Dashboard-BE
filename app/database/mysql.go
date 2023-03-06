@@ -9,6 +9,7 @@ import (
 
 	"alta-dashboard-be/app/config"
 	_userData "alta-dashboard-be/features/users/data"
+	_logData "alta-dashboard-be/features/logs/data"
 )
 
 func InitDB(cfg config.AppConfig) *gorm.DB {
@@ -25,5 +26,5 @@ func InitDB(cfg config.AppConfig) *gorm.DB {
 }
 
 func InitialMigration(db *gorm.DB) {
-	db.AutoMigrate(&_userData.User{})
+	db.AutoMigrate(&_userData.User{}, &_logData.Mentee{}, &_logData.Log{})
 }

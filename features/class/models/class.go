@@ -13,5 +13,5 @@ type Class struct {
 	StartDate time.Time `gorm:"not null"`
 	EndDate   time.Time `gorm:"not null"`
 	UserID    int       `gorm:"not null;foreignKey"`
-	// User      u.User    `gorm:"foreignKey:UserID,references:ID"`
+	// User      u.User    `gorm:"foreignKey:UserID,references:ID"`  
 }

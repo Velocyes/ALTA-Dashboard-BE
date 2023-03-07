@@ -6,7 +6,6 @@ import (
 	"alta-dashboard-be/utils/consts"
 	"alta-dashboard-be/utils/helper"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -62,9 +61,9 @@ func (userHandler *UserHandler) Register(c echo.Context) error {
 
 	userEntity, err := userHandler.userService.Create(inputedUserEntity, loggedInUserRole)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest{
+		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err.Error() ==  consts.USER_EmptyCredentialError{
+		} else if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
 		} else if err.Error() == consts.USER_EmailAlreadyUsed {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmailAlreadyUsed))
@@ -76,22 +75,11 @@ func (userHandler *UserHandler) Register(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) GetAllUser(c echo.Context) error {
-	page, limit, pageParam, limitParam := -1, -1, c.QueryParam("page"), c.QueryParam("limit")
-	if pageParam != "" {
-		castedPageParam, errCasting := strconv.Atoi(pageParam)
-		if errCasting != nil {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
-		}
-		page = castedPageParam
+	page, limit, err := helper.ExtractPageLimit(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
-	if limitParam != "" {
-		castedLimitParam, errCasting := strconv.Atoi(limitParam)
-		if errCasting != nil {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
-		}
-		limit = castedLimitParam
-	}
-	
+
 	dataResponse, err := userHandler.userService.GetAll(helper.LimitOffsetConvert(page, limit))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
@@ -101,14 +89,14 @@ func (userHandler *UserHandler) GetAllUser(c echo.Context) error {
 	if !exist {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
 	}
-	dataResponse["data"] =  listEntityToResponse(userEntities.([]users.UserEntity))
+	dataResponse["data"] = listEntityToResponse(userEntities.([]users.UserEntity))
 	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessReadUserData, dataResponse))
 }
 
 func (userHandler *UserHandler) GetUserData(c echo.Context) error {
-	userId, errCasting := strconv.Atoi(c.Param("user_id"))
-	if errCasting != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
+	userId, errExtract := helper.ExtractIDParam(c)
+	if errExtract != nil {
+		return c.JSON(http.StatusBadRequest, errExtract)
 	}
 
 	loggedInUserId, loggedInUserRole, err := middlewares.ExtractToken(c)
@@ -118,7 +106,7 @@ func (userHandler *UserHandler) GetUserData(c echo.Context) error {
 
 	userEntity, err := userHandler.userService.GetData(loggedInUserId, uint(userId), loggedInUserRole)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest{
+		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
@@ -129,9 +117,9 @@ func (userHandler *UserHandler) GetUserData(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
-	userId, errCasting := strconv.Atoi(c.Param("user_id"))
-	if errCasting != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
+	userId, errExtract := helper.ExtractIDParam(c)
+	if errExtract != nil {
+		return c.JSON(http.StatusBadRequest, errExtract)
 	}
 
 	loggedInUserId, loggedInUserRole, err := middlewares.ExtractToken(c)
@@ -148,11 +136,11 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 
 	userEntity, err = userHandler.userService.ModifyData(loggedInUserId, uint(userId), loggedInUserRole, userEntity)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest{
+		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
-		} else if err.Error() == consts.USER_FailedUpdate{
+		} else if err.Error() == consts.USER_FailedUpdate {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_FailedUpdate))
 		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
@@ -162,9 +150,9 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
-	userId, errCasting := strconv.Atoi(c.Param("user_id"))
-	if errCasting != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
+	userId, errExtract := helper.ExtractIDParam(c)
+	if errExtract != nil {
+		return c.JSON(http.StatusBadRequest, errExtract)
 	}
 
 	loggedInUserId, loggedInUserRole, err := middlewares.ExtractToken(c)
@@ -174,11 +162,11 @@ func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
 
 	err = userHandler.userService.Remove(loggedInUserId, uint(userId), loggedInUserRole)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest{
+		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
-		} else if err.Error() == consts.USER_FailedDelete{
+		} else if err.Error() == consts.USER_FailedDelete {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_FailedUpdate))
 		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.USER_FailedDelete))

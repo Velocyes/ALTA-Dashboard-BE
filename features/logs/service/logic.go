@@ -4,7 +4,6 @@ import (
 	"alta-dashboard-be/features/logs"
 
 	"github.com/go-playground/validator/v10"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type logService struct {
@@ -17,11 +16,6 @@ func New(logData logs.LogDataInterface_) logs.LogServiceInterface_ {
 		logData:  logData,
 		validate: validator.New(),
 	}
-}
-
-func HashPassword(inputPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(inputPassword), 14)
-	return string(hashedPassword), err
 }
 
 func (logService *logService) Create(logInput logs.LogEntity, loggedInUserId uint) (logs.LogEntity, error) {

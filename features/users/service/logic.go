@@ -45,10 +45,6 @@ func (userService *userService) Create(userInput users.UserEntity, loggedInUserR
 		return users.UserEntity{}, errors.New(consts.SERVER_ForbiddenRequest)
 	}
 	
-	if userInput.Email == "" || userInput.Password == "" {
-		return users.UserEntity{}, errors.New(consts.USER_EmptyCredentialError)
-	}
-
 	userInput.Email = strings.ToLower(userInput.Email)
 	userInput.Password, _ = HashPassword(userInput.Password)
 	err := userService.validate.Struct(userInput)

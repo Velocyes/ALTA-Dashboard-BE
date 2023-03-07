@@ -115,7 +115,7 @@ paths:
 
       responses:
         '201':
-          description: Succeed register
+          description: Success response with return of inserted data
           content:
             application/json:
               schema:
@@ -365,6 +365,77 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /logs:
+    post:
+      tags:
+        - Logs
+      summary: add logs
+      description: Create new logs
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: title
+          description: "Log's title"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: "Lorem Ipsum"
+        - name: status
+          description: "Mentee's status change logs"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: "Join Class"
+        - name: feedback
+          description: "Mentee's feedback logs"
+          required: true
+          in: path
+          schema:
+            type: string
+            example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        - name: mentee_id
+          description: "Mentee's id you want to assigned for"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
+            
+      requestBody:
+        required: true
+        content:
+          application/form-data:
+            schema:
+              type: object
+              example:
+                title: "Lorem Ipsum"
+                status: "Join Class"
+                feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                mentee_id: 1
+
+      responses:
+        '204':
+          description: Success response with return of inserted data
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully insert log data"
+                  data:
+                  - id: 1
+                    title: "Lorem Ipsum"
+                    status: "Join Class"
+                    feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    user_id: 1
+                    mentee_id: 1
+
+        '500':
+          $ref: '#/components/responses/500'
+
 ####################################
 #  COMPONENTS
 ####################################
@@ -408,6 +479,34 @@ components:
             - 'Active'
             - 'Not-Active'
             - 'Deleted'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Log:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - None
+            - Join Class
+            - Continue Section 2
+            - Continue Section 3
+        feedback:
+          type: string
+        user_id:
+          type: integer
+        mentee_id:
+          type: integer
         created_at:
           type: string
           format: date-time

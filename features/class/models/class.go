@@ -1,7 +1,7 @@
 package models
 
 import (
-	u "alta-dashboard-be/features/users/data"
+	u "alta-dashboard-be/features/users/models"
 	"time"
 
 	"gorm.io/gorm"

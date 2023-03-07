@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"alta-dashboard-be/utils/consts"
 	"errors"
 	"strconv"
 
@@ -19,7 +20,7 @@ func ExtractIDParam(c echo.Context) (int, error) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		return 0, errors.New("invalid id parameter")
+		return 0, errors.New(consts.ECHO_InvaildIdParam)
 	}
 	return id, nil
 }
@@ -28,12 +29,12 @@ func ExtractPageLimit(c echo.Context) (page int, limit int, err error) {
 	pageStr := c.QueryParam("page")
 	page, err = strconv.Atoi(pageStr)
 	if err != nil {
-		return 0, 0, errors.New("invalid page parameter")
+		return 0, 0, errors.New(consts.ECHO_InvaildPageParam)
 	}
 	limitStr := c.QueryParam("limit")
 	limit, err = strconv.Atoi(limitStr)
 	if err != nil {
-		return 0, 0, errors.New("invalid limit parameter")
+		return 0, 0, errors.New(consts.ECHO_InvaildLimitParam)
 	}
 	return page, limit, nil
 }

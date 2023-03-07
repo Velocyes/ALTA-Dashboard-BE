@@ -34,6 +34,9 @@ func (userQuery *userQuery) Login(email string, password string) (users.UserEnti
 		if txSelect.Error == gorm.ErrInvalidDB {
 			return users.UserEntity{}, "", errors.New(gorm.ErrInvalidDB.Error())
 		}
+		if txSelect.Error == gorm.ErrRecordNotFound {
+			return users.UserEntity{}, "", errors.New(gorm.ErrRecordNotFound.Error())
+		}
 		return users.UserEntity{}, "", errors.New(consts.SERVER_InternalServerError)
 	}
 
@@ -81,7 +84,7 @@ func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error)
 	userEntities := ListGormToEntity(usersGorm)
 	if limit != -1 {
 		dataResponse["total_page"] = int(dataCount) / limit
-		dataResponse["page"] = (int(dataCount) - limit) / limit
+		dataResponse["page"] = (offset / limit) + 1
 		dataResponse["data"] = userEntities
 	} else {
 		dataResponse["data"] = userEntities

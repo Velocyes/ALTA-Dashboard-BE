@@ -21,7 +21,5 @@ func main() {
 	}))
 	router.InitRouter(db, e)
 
-	//a
-
 	e.Logger.Fatal(e.Start(":8081"))
 }

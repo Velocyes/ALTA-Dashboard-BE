@@ -41,7 +41,7 @@ func convertToResponse(u *mentee.MenteeCore) mentee.MenteeResponse {
 		EmergencyStatus:   u.EmergencyStatus,
 		EducationType:     u.EducationType,
 		EducationMajor:    u.EducationMajor,
-		EducationGradDate: u.EducationGradDate.Format(""),
+		EducationGradDate: u.EducationGradDate.Format("2006-01-02"),
 	}
 }
 

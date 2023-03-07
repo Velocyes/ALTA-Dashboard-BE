@@ -11,6 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+//go:generate mockery --name JWTMiddleware_ --output ../mocks
 type JWTMiddleware_ interface {
 	ExtractToken(e echo.Context) (uint, string, error)
 }

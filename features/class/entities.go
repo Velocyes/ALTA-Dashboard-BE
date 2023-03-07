@@ -52,14 +52,6 @@ type ClassService_ interface {
 }
 
 //go:generate mockery --name ClassDelivery_ --output ../../mocks
-
-type EchoClassContext interface {
-	Bind(interface{}) error
-	Param(string) string
-	QueryParam(string) string
-	JSON(int, interface{}) error
-}
-
 type ClassDelivery_ interface {
 	Create(c echo.Context) error
 	GetAll(c echo.Context) error

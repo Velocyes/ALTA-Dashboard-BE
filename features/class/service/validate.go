@@ -9,12 +9,12 @@ import (
 
 func validate(c *class.ClassCore) error {
 	//validate name only space and alphanumeric
-	if !regexp.MustCompile(`/^[a-z\d\-_\s]+$/i`).MatchString(c.Name) {
+	if !regexp.MustCompile(`^[-_ a-zA-Z0-9]+$`).MatchString(c.Name) {
 		return errors.New("name must only contain space and alphanumeric")
 	}
 
 	//validate short name only space and alphanumeric
-	if !regexp.MustCompile(`/^[a-z\d\-_\s]+$/i`).MatchString(c.ShortName) {
+	if !regexp.MustCompile(`^[-_ a-zA-Z0-9]+$`).MatchString(c.ShortName) {
 		return errors.New("short_name must only contain space and alphanumeric")
 	}
 
@@ -28,9 +28,10 @@ func validate(c *class.ClassCore) error {
 		return errors.New("end_date cannot be earlier than start date")
 	}
 
+	now := time.Now().Unix()
 	//validate start date and end date cannot older than today
-	if time.Since(c.StartDate).Hours() <= (1*time.Hour.Hours()) || time.Since(c.EndDate).Hours() <= (1*time.Hour.Hours()) {
-		return errors.New("start_date and end_date cannot set in the a past")
+	if c.StartDate.Unix() <= now || c.EndDate.Unix() <= now {
+		return errors.New("start_date and end_date cannot set in the a past or today")
 	}
 
 	return nil

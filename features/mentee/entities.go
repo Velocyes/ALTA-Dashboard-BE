@@ -55,6 +55,7 @@ type MenteeResponse struct {
 	ClassID           int
 }
 
+//go:generate mockery --name MenteeData_ --output ../../mocks
 type MenteeData_ interface {
 	Create(mentee MenteeCore) error
 	GetAll(page int, limit int) ([]MenteeCore, error)
@@ -63,6 +64,7 @@ type MenteeData_ interface {
 	Delete(id int) error
 }
 
+//go:generate mockery --name MenteeService_ --output ../../mocks
 type MenteeService_ interface {
 	Create(userID int, mentee MenteeCore) error
 	GetAll(page int, limit int) ([]MenteeCore, error)
@@ -71,6 +73,7 @@ type MenteeService_ interface {
 	Delete(userID int, id int) error
 }
 
+//go:generate mockery --name MenteeDelivery_ --output ../../mocks
 type MenteeDelivery_ interface {
 	Create(c echo.Context) error
 	GetAll(c echo.Context) error

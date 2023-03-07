@@ -10,7 +10,7 @@ type ClassService struct {
 }
 
 // Create implements class.ClassService_
-func (*ClassService) Create(userID int, class class.ClassCore) error {
+func (u *ClassService) Create(userID int, class class.ClassCore) error {
 	//validate userID
 	if userID <= 0 {
 		return errors.New("invalid UserID")
@@ -22,7 +22,7 @@ func (*ClassService) Create(userID int, class class.ClassCore) error {
 	if err != nil {
 		return err
 	}
-	panic("unimplemented")
+	return u.data.Create(class)
 }
 
 // Delete implements class.ClassService_

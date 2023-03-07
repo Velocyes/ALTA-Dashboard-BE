@@ -33,7 +33,7 @@ func (userHandler *UserHandler) Login(c echo.Context) error {
 		if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
 		} 
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 
 	dataResponse := map[string]any{
@@ -164,8 +164,6 @@ func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
-		} else if err.Error() == consts.USER_FailedDelete {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_FailedUpdate))
 		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.USER_FailedDelete))
 	}

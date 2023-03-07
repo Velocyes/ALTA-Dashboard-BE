@@ -19,6 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/linux-pc/ALTA-Dashboard-BE
+            sudo chmod 777 /var/run/docker.sock
             git pull origin main
             docker stop alta-dashboard-be-container
             docker rm alta-dashboard-be-container

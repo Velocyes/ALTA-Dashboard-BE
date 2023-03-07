@@ -1,7 +1,6 @@
 package models
 
 import (
-	u "alta-dashboard-be/features/users/models"
 	"time"
 
 	"gorm.io/gorm"
@@ -13,6 +12,6 @@ type Class struct {
 	ShortName string    `gorm:"not null;type:varchar(10)"`
 	StartDate time.Time `gorm:"not null"`
 	EndDate   time.Time `gorm:"not null"`
-	UserID    int       `gorm:"not null";foreignKey`
-	User      u.User    `foreignKey:UserID,references:ID`
+	UserID    int       `gorm:"not null;foreignKey"`
+	// User      u.User    `gorm:"foreignKey:UserID,references:ID"`  
 }

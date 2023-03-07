@@ -2,6 +2,7 @@ package data
 
 import (
 	"alta-dashboard-be/features/logs"
+	_logModel "alta-dashboard-be/features/logs/models"
 	"alta-dashboard-be/utils/consts"
 	"errors"
 
@@ -34,7 +35,7 @@ func (logQuery *logQuery) Insert(input logs.LogEntity) (logs.LogEntity, error) {
 }
 
 func (logQuery *logQuery) SelectData(searchedMenteeId uint, limit, offset int) (map[string]any, error) {
-	logsGorm, dataCount, dataResponse := []Log{}, int64(0), map[string]any{}
+	logsGorm, dataCount, dataResponse := []_logModel.Log{}, int64(0), map[string]any{}
 	txCount := logQuery.db.Table("logs").Where("mentee_id = ?", searchedMenteeId).Count(&dataCount)
 	txSelect := logQuery.db.Model(&logsGorm).Where("mentee_id = ?", searchedMenteeId).Limit(limit).Offset(offset).Find(&logsGorm)
 	if txSelect.Error != nil || txCount.Error != nil {

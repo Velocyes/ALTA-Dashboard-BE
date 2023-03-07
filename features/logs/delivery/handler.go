@@ -21,7 +21,7 @@ func New(logService logs.LogServiceInterface) *LogHandler {
 }
 
 func (logHandler *LogHandler) AddLog(c echo.Context) error {
-	logInput := LogRequest{}
+	logInput := logs.LogRequest{}
 	err := c.Bind(&logInput)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.LOG_ErrorBindLogData))

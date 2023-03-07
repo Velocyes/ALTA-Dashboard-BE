@@ -1,28 +1,12 @@
 package data
 
 import (
-	"gorm.io/gorm"
-
 	"alta-dashboard-be/features/logs"
+	_logModel "alta-dashboard-be/features/logs/models"
 )
 
-type Log struct {
-	gorm.Model
-	Title    string `gorm:"not null"`
-	Status   string `gorm:"type:enum('None', 'Join Class', 'Continue Section 2', 'Continue Section 3');default:'None';not null"`
-	Feedback string `gorm:"not null"`
-	UserID   uint
-	MenteeID uint
-}
-
-// Mock
-type Mentee struct {
-	gorm.Model
-	Logs []Log
-}
-
-func EntityToGorm(logEntity logs.LogEntity) Log {
-	log := Log{
+func EntityToGorm(logEntity logs.LogEntity) _logModel.Log {
+	logGorm := _logModel.Log{
 		Title:    logEntity.Title,
 		Status:   logEntity.Status,
 		Feedback: logEntity.Feedback,
@@ -30,12 +14,12 @@ func EntityToGorm(logEntity logs.LogEntity) Log {
 		MenteeID: logEntity.MenteeID,
 	}
 	if logEntity.Id != 0 {
-		log.ID = logEntity.Id
+		logGorm.ID = logEntity.Id
 	}
-	return log
+	return logGorm
 }
 
-func GormToEntity(logGorm Log) logs.LogEntity {
+func GormToEntity(logGorm _logModel.Log) logs.LogEntity {
 	return logs.LogEntity{
 		Id:        logGorm.ID,
 		Title:     logGorm.Title,
@@ -48,7 +32,7 @@ func GormToEntity(logGorm Log) logs.LogEntity {
 	}
 }
 
-func ListGormToEntity(logsGorm []Log) []logs.LogEntity {
+func ListGormToEntity(logsGorm []_logModel.Log) []logs.LogEntity {
 	var logEntities []logs.LogEntity
 	for _, v := range logsGorm {
 		logEntities = append(logEntities, GormToEntity(v))

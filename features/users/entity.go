@@ -48,8 +48,6 @@ type UserResponse struct {
 	Status   string `json:"status"`
 }
 
-
-
 type UserServiceInterface interface {
 	Login(email string, password string) (UserEntity, string, error)
 	Create(input UserEntity, loggedInUserRole string) (UserEntity, error)

@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 
 	"alta-dashboard-be/app/config"
-	_logData "alta-dashboard-be/features/logs/data"
-	_userData "alta-dashboard-be/features/users/data"
+	_logModel "alta-dashboard-be/features/logs/models"
+	_userModel "alta-dashboard-be/features/users/models"
 	_userService "alta-dashboard-be/features/users/service"
 	"alta-dashboard-be/utils/consts"
 )
@@ -28,15 +28,15 @@ func InitDB(cfg config.AppConfig) *gorm.DB {
 }
 
 func initSuperAdmin(db *gorm.DB) {
-	userGorm := _userData.User{Role: consts.E_USER_Admin}
+	userGorm := _userModel.User{Role: consts.E_USER_Admin}
 	db.Model(userGorm).First(&userGorm)
 	if userGorm.ID == 0 {
 		hashedPassword, _ := _userService.HashPassword("qwerty")
-		db.Model(userGorm).Save(&_userData.User{FullName: "User", Email: "User@gmail.com", Password: hashedPassword, Role: consts.E_USER_Admin})
+		db.Model(userGorm).Save(&_userModel.User{FullName: "User", Email: "User@gmail.com", Password: hashedPassword, Role: consts.E_USER_Admin})
 	}
 }
 
 func InitialMigration(db *gorm.DB) {
-	db.AutoMigrate(&_userData.User{}, &_logData.Mentee{}, &_logData.Log{})
+	db.AutoMigrate(&_userModel.User{}, &_logModel.Mentee{}, &_logModel.Log{})
 	initSuperAdmin(db)
 }

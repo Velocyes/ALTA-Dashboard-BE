@@ -2,6 +2,8 @@ package service
 
 import (
 	"alta-dashboard-be/features/logs"
+	"alta-dashboard-be/utils/consts"
+	"errors"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -22,7 +24,7 @@ func (logService *logService) Create(logInput logs.LogEntity, loggedInUserId uin
 	logInput.UserID = loggedInUserId
 	err := logService.validate.Struct(logInput)
 	if err != nil {
-		return logs.LogEntity{}, err
+		return logs.LogEntity{}, errors.New(consts.VALIDATION_InvalidInput)
 	}
 
 	logEntity, err := logService.logData.Insert(logInput)

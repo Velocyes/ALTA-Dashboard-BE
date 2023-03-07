@@ -1,9 +1,9 @@
 package service
 
 import (
-	"errors"
 	"alta-dashboard-be/features/users"
 	"alta-dashboard-be/utils/consts"
+	"errors"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -44,12 +44,12 @@ func (userService *userService) Create(userInput users.UserEntity, loggedInUserR
 	if loggedInUserRole != consts.E_USER_Admin {
 		return users.UserEntity{}, errors.New(consts.SERVER_ForbiddenRequest)
 	}
-	
+
 	userInput.Email = strings.ToLower(userInput.Email)
 	userInput.Password, _ = HashPassword(userInput.Password)
 	err := userService.validate.Struct(userInput)
 	if err != nil {
-		return users.UserEntity{}, err
+		return users.UserEntity{}, errors.New(consts.VALIDATION_InvalidInput)
 	}
 
 	userEntity, err := userService.userData.Insert(userInput)
@@ -92,9 +92,9 @@ func (userService *userService) ModifyData(loggedInUserId, userId uint, loggedIn
 	userInput.Id = userId
 	err := userService.validate.Struct(userInput)
 	if err != nil {
-		return users.UserEntity{}, err
+		return users.UserEntity{}, errors.New(consts.VALIDATION_InvalidInput)
 	}
-	
+
 	userEntity, err := userService.userData.UpdateData(userInput)
 	if err != nil {
 		return users.UserEntity{}, err

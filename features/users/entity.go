@@ -2,6 +2,8 @@ package users
 
 import (
 	"time"
+
+	"github.com/labstack/echo/v4"
 )
 
 type UserEntity struct {
@@ -9,9 +11,9 @@ type UserEntity struct {
 	FullName  string `validate:"required"`
 	Email     string `validate:"required,email"`
 	Password  string `validate:"required"`
-	Team      string 
-	Role      string 
-	Status    string 
+	Team      string
+	Role      string
+	Status    string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -48,7 +50,8 @@ type UserResponse struct {
 	Status   string `json:"status"`
 }
 
-type UserServiceInterface interface {
+//go:generate mockery --name UserService_ --output ../../mocks
+type UserServiceInterface_ interface {
 	Login(email string, password string) (UserEntity, string, error)
 	Create(input UserEntity, loggedInUserRole string) (UserEntity, error)
 	GetAll(limit, offset int) (map[string]any, error)
@@ -57,11 +60,22 @@ type UserServiceInterface interface {
 	Remove(loggedInUserId, userId uint, loggedInUserRole string) error
 }
 
-type UserDataInterface interface {
+//go:generate mockery --name UserData_ --output ../../mocks
+type UserDataInterface_ interface {
 	Login(email string, password string) (UserEntity, string, error)
 	Insert(input UserEntity) (UserEntity, error)
 	SelectAll(limit, offset int) (map[string]any, error)
 	SelectData(userId uint) (UserEntity, error)
 	UpdateData(input UserEntity) (UserEntity, error)
 	Delete(userId uint) error
+}
+
+//go:generate mockery --name UserDelivery_ --output ../../mocks
+type UserDeliveryInterface_ interface {
+	Login(c echo.Context) error
+	Register(c echo.Context) error
+	GetAllUser(c echo.Context) error
+	GetUserData(c echo.Context) error
+	UpdateAccount(c echo.Context) error
+	RemoveAccount(c echo.Context) error
 }

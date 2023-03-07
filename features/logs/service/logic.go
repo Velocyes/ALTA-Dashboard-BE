@@ -8,11 +8,11 @@ import (
 )
 
 type logService struct {
-	logData  logs.LogDataInterface
+	logData  logs.LogDataInterface_
 	validate *validator.Validate
 }
 
-func New(logData logs.LogDataInterface) logs.LogServiceInterface {
+func New(logData logs.LogDataInterface_) logs.LogServiceInterface_ {
 	return &logService{
 		logData:  logData,
 		validate: validator.New(),
@@ -47,32 +47,3 @@ func (logService *logService) GetData(searchedMenteeId uint, limit, offset int) 
 
 	return dataResponse, nil
 }
-
-// func (userService *userService) ModifyData(loggedInUserId, userId uint, loggedInUserRole string, userInput users.UserEntity) (users.UserEntity, error) {
-// 	// Validasi loggedInUser mengubah data siapa
-// 	if loggedInUserId != userId && loggedInUserRole == consts.E_USER_User {
-// 		return users.UserEntity{}, errors.New(consts.SERVER_ForbiddenRequest)
-// 	}
-
-// 	userInput.Id = userId
-// 	userEntity, err := userService.userData.UpdateData(userInput)
-// 	if err != nil {
-// 		return users.UserEntity{}, err
-// 	}
-
-// 	return userEntity, nil
-// }
-
-// func (userService *userService) Remove(loggedInUserId, userId uint, loggedInUserRole string) error {
-// 	// Validasi loggedInUser menghapus data siapa
-// 	if loggedInUserId != userId && loggedInUserRole == consts.E_USER_User {
-// 		return errors.New(consts.SERVER_ForbiddenRequest)
-// 	}
-
-// 	err := userService.userData.Delete(userId)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }

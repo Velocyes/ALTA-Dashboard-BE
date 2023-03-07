@@ -2,6 +2,8 @@ package logs
 
 import (
 	"time"
+
+	"github.com/labstack/echo/v4"
 )
 
 type LogEntity struct {
@@ -34,16 +36,20 @@ type LogResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type LogServiceInterface interface {
+//go:generate mockery --name LogService_ --output ../../mocks
+type LogServiceInterface_ interface {
 	Create(logInput LogEntity, loggedInUserId uint) (LogEntity, error)
 	GetData(searchedMenteeId uint, limit, offset int) (map[string]any, error)
-	// ModifyData(loggedInUserId, userId uint, loggedInUserRole string, input UserEntity) (logEntity, error)
-	// Remove(loggedInUserId, userId uint, loggedInUserRole string) error
 }
 
-type LogDataInterface interface {
+//go:generate mockery --name type LogData_ --output ../../mocks
+type LogDataInterface_ interface {
 	Insert(input LogEntity) (LogEntity, error)
 	SelectData(searchedMenteeId uint, limit, offset int) (map[string]any, error)
-	// UpdateData(input UserEntity) (UserEntity, error)
-	// Delete(userId uint) error
+}
+
+//go:generate mockery --name LogDelivery_ --output ../../mocks
+type LogDeliveryInterface_ interface {
+	AddLog(c echo.Context) error
+	GetLogDataByMenteeId(c echo.Context) error
 }

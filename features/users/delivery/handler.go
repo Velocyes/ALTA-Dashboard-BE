@@ -12,12 +12,14 @@ import (
 )
 
 type UserHandler struct {
-	userService users.UserServiceInterface
+	userService users.UserServiceInterface_
+	jwt         middlewares.JWTMiddleware_
 }
 
-func New(userService users.UserServiceInterface) *UserHandler {
+func New(userService users.UserServiceInterface_, jwt middlewares.JWTMiddleware_) users.UserDeliveryInterface_ {
 	return &UserHandler{
 		userService: userService,
+		jwt:         jwt,
 	}
 }
 
@@ -32,7 +34,7 @@ func (userHandler *UserHandler) Login(c echo.Context) error {
 	if err != nil {
 		if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
-		} 
+		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 

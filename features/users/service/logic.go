@@ -11,11 +11,11 @@ import (
 )
 
 type userService struct {
-	userData users.UserDataInterface
+	userData users.UserDataInterface_
 	validate *validator.Validate
 }
 
-func New(userData users.UserDataInterface) users.UserServiceInterface {
+func New(userData users.UserDataInterface_) users.UserServiceInterface_ {
 	return &userService{
 		userData: userData,
 		validate: validator.New(),

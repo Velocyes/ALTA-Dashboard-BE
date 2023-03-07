@@ -2,7 +2,7 @@ package models
 
 import (
 	cm "alta-dashboard-be/features/class/models"
-	"time"
+	"database/sql"
 
 	"gorm.io/gorm"
 )
@@ -28,8 +28,8 @@ type Emergency struct {
 }
 
 type Education struct {
-	MenteeID       int       `gorm:"primaryKey"`
-	Type           string    `gorm:"type:ENUM('IT','NON-IT');not null"`
-	Major          string    `gorm:"type:varchar(50);not null"`
-	GraduationDate time.Time `gorm:"type:date"`
+	MenteeID       int          `gorm:"primaryKey"`
+	Type           string       `gorm:"type:ENUM('IT','NON-IT');not null"`
+	Major          string       `gorm:"type:varchar(50);not null"`
+	GraduationDate sql.NullTime `gorm:"type:date"`
 }

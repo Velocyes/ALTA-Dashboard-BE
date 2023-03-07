@@ -58,7 +58,7 @@ func (u *ClassData) GetOne(id int) (class.ClassCore, error) {
 func (u *ClassData) Update(id int, class class.ClassCore) error {
 	mdl := convertToModel(&class)
 	tx := u.db.Where("id = ?", id).Updates(&mdl)
-	if tx.Error != nil {
+	if tx.Error != nil || tx.RowsAffected == 0 {
 		return errors.New("error in database")
 	}
 	return nil

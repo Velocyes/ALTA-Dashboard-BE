@@ -81,7 +81,7 @@ func (u *ClassDelivery) GetAll(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
-	return c.JSON(http.StatusOK, d)
+	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse("", d))
 }
 
 // GetOne implements class.ClassDelivery_
@@ -100,7 +100,7 @@ func (u *ClassDelivery) GetOne(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse("", res))
 }
 
 // Update implements class.ClassDelivery_

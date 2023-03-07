@@ -75,7 +75,7 @@ func (userHandler *UserHandler) Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, helper.SuccessWithDataResponse(consts.USER_RegisterSuccess, entityToResponse(userEntity)))
 }
 
-func (delivery *UserHandler) GetAllUser(c echo.Context) error {
+func (userHandler *UserHandler) GetAllUser(c echo.Context) error {
 	page, limit, pageParam, limitParam := -1, -1, c.QueryParam("page"), c.QueryParam("limit")
 	if pageParam != "" {
 		castedPageParam, errCasting := strconv.Atoi(pageParam)
@@ -92,7 +92,7 @@ func (delivery *UserHandler) GetAllUser(c echo.Context) error {
 		limit = castedLimitParam
 	}
 	
-	dataResponse, err := delivery.userService.GetAll(helper.LimitOffsetConvert(page, limit))
+	dataResponse, err := userHandler.userService.GetAll(helper.LimitOffsetConvert(page, limit))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
@@ -106,7 +106,7 @@ func (delivery *UserHandler) GetAllUser(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) GetUserData(c echo.Context) error {
-	userId, errCasting := strconv.Atoi(c.Param("id"))
+	userId, errCasting := strconv.Atoi(c.Param("user_id"))
 	if errCasting != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
 	}
@@ -129,7 +129,7 @@ func (userHandler *UserHandler) GetUserData(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
-	userId, errCasting := strconv.Atoi(c.Param("id"))
+	userId, errCasting := strconv.Atoi(c.Param("user_id"))
 	if errCasting != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
 	}
@@ -162,7 +162,7 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
-	userId, errCasting := strconv.Atoi(c.Param("id"))
+	userId, errCasting := strconv.Atoi(c.Param("user_id"))
 	if errCasting != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
 	}

@@ -25,4 +25,4 @@ jobs:
             docker rm alta-dashboard-be-container
             docker rmi alta-dashboard-be
             docker build -t alta-dashboard-be:latest .
-            docker run -d -p 80:80 -e JWT_KEY=${{ secrets.JWT_KEY }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOSTNAME=${{ secrets.DB_HOSTNAME }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name alta-dashboard-be-container alta-dashboard-be:latest
+            docker run -d -p 8081:8081 -e JWT_KEY=${{ secrets.JWT_KEY }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_HOSTNAME=${{ secrets.DB_HOSTNAME }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_NAME=${{ secrets.DB_NAME }} --name alta-dashboard-be-container alta-dashboard-be:latest

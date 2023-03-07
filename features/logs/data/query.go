@@ -21,13 +21,9 @@ func New(db *gorm.DB) logs.LogDataInterface {
 
 func (logQuery *logQuery) Insert(input logs.LogEntity) (logs.LogEntity, error) {
 	logGorm := EntityToGorm(input)
-	txInsert := logQuery.db.Create(&logGorm)
-	if txInsert.Error != nil {
-		if txInsert.Error == gorm.ErrInvalidDB {
-			return logs.LogEntity{}, errors.New(gorm.ErrInvalidDB.Error())
-		}
-		return logs.LogEntity{}, txInsert.Error
-		// return logs.LogEntity{}, errors.New(consts.SERVER_InternalServerError)
+	tx := logQuery.db.Create(&logGorm)
+	if tx.Error != nil || tx.RowsAffected == 0{
+		return logs.LogEntity{}, errors.New(consts.SERVER_ErrorInDatabase)
 	}
 
 	logEntity := GormToEntity(logGorm)
@@ -39,10 +35,7 @@ func (logQuery *logQuery) SelectData(searchedMenteeId uint, limit, offset int) (
 	txCount := logQuery.db.Table("logs").Where("mentee_id = ?", searchedMenteeId).Count(&dataCount)
 	txSelect := logQuery.db.Model(&logsGorm).Where("mentee_id = ?", searchedMenteeId).Limit(limit).Offset(offset).Find(&logsGorm)
 	if txSelect.Error != nil || txCount.Error != nil {
-		if txSelect.Error == gorm.ErrInvalidDB {
-			return nil, errors.New(gorm.ErrInvalidDB.Error())
-		}
-		return nil, errors.New(consts.SERVER_InternalServerError)
+		return nil, errors.New(consts.SERVER_ErrorInDatabase)
 	}
 
 	logEntities := ListGormToEntity(logsGorm)

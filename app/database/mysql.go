@@ -9,6 +9,8 @@ import (
 
 	"alta-dashboard-be/app/config"
 	_logModel "alta-dashboard-be/features/logs/models"
+	_menteeModel "alta-dashboard-be/features/mentee/models"
+	_classModel "alta-dashboard-be/features/class/models"
 	_userModel "alta-dashboard-be/features/users/models"
 	_userService "alta-dashboard-be/features/users/service"
 	"alta-dashboard-be/utils/consts"
@@ -32,11 +34,11 @@ func initSuperAdmin(db *gorm.DB) {
 	db.Model(userGorm).First(&userGorm)
 	if userGorm.ID == 0 {
 		hashedPassword, _ := _userService.HashPassword("qwerty")
-		db.Model(userGorm).Save(&_userModel.User{FullName: "User", Email: "User@gmail.com", Password: hashedPassword, Role: consts.E_USER_Admin})
+		db.Model(userGorm).Save(&_userModel.User{FullName: "Admin", Email: "Admin@gmail.com", Password: hashedPassword, Role: consts.E_USER_Admin})
 	}
 }
 
 func InitialMigration(db *gorm.DB) {
-	db.AutoMigrate(&_userModel.User{}, &_logModel.Mentee{}, &_logModel.Log{})
+	db.AutoMigrate(&_userModel.User{}, _classModel.Class{}, _menteeModel.Emergency{}, _menteeModel.Education{}, &_menteeModel.Mentee{}, &_logModel.Log{})
 	initSuperAdmin(db)
 }

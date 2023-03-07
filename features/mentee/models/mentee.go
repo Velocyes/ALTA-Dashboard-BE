@@ -2,6 +2,7 @@ package models
 
 import (
 	cm "alta-dashboard-be/features/class/models"
+	lm "alta-dashboard-be/features/logs/models"
 	"database/sql"
 
 	"gorm.io/gorm"
@@ -16,8 +17,9 @@ type Mentee struct {
 	Telegram  string    `gorm:"type:varchar(25);not null"`
 	Emergency Emergency `gorm:"foreignKey:ID;references:MenteeID"`
 	Education Education `gorm:"foreignKey:ID;references:MenteeID"`
-	ClassID   int
-	Class     cm.Class `gorm:"foreignKey:ClassID;references:ID"`
+	ClassID   int       `gorm:"not null;foreignKey"`
+	Class     cm.Class  `gorm:"foreignKey:ClassID;references:ID"`
+	Logs      []lm.Log
 }
 
 type Emergency struct {

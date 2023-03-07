@@ -8,10 +8,10 @@ type UserEntity struct {
 	Id        uint
 	FullName  string `validate:"required"`
 	Email     string `validate:"required,email"`
-	Password  string
-	Team      string
-	Role      string
-	Status    string
+	Password  string `validate:"required"`
+	Team      string 
+	Role      string 
+	Status    string 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

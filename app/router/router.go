@@ -4,6 +4,9 @@ import (
 	_classData "alta-dashboard-be/features/class/data"
 	_classHandler "alta-dashboard-be/features/class/delivery"
 	_classService "alta-dashboard-be/features/class/service"
+	_logData "alta-dashboard-be/features/logs/data"
+	_logHandler "alta-dashboard-be/features/logs/delivery"
+	_logService "alta-dashboard-be/features/logs/service"
 	_menteeData "alta-dashboard-be/features/mentee/data"
 	_menteeHandler "alta-dashboard-be/features/mentee/delivery"
 	_menteeService "alta-dashboard-be/features/mentee/service"
@@ -22,11 +25,24 @@ func initUserRouter(db *gorm.DB, e *echo.Echo) {
 	userHandler := _userHandler.New(userService)
 
 	e.GET("/users", userHandler.GetAllUser)
-	e.GET("/users/:id", userHandler.GetUserData, middlewares.JWTMiddleware())
+	e.GET("/users/:user_id", userHandler.GetUserData, middlewares.JWTMiddleware())
 	e.POST("/users/login", userHandler.Login)
 	e.POST("/users", userHandler.Register, middlewares.JWTMiddleware())
-	e.PUT("/users/:id", userHandler.UpdateAccount, middlewares.JWTMiddleware())
-	e.DELETE("/users/:id", userHandler.RemoveAccount, middlewares.JWTMiddleware())
+	e.PUT("/users/:user_id", userHandler.UpdateAccount, middlewares.JWTMiddleware())
+	e.DELETE("/users/:user_id", userHandler.RemoveAccount, middlewares.JWTMiddleware())
+}
+
+func initLogRouter(db *gorm.DB, e *echo.Echo) {
+	logData := _logData.New(db)
+	logService := _logService.New(logData)
+	logHandler := _logHandler.New(logService)
+
+	e.POST("/logs", logHandler.AddLog, middlewares.JWTMiddleware())
+	e.GET("/mentees/:mentee_id/logs", logHandler.GetLogDataByMenteeId)
+	// e.POST("/users/login", userHandler.Login)
+	// e.POST("/users", userHandler.Register, middlewares.JWTMiddleware())
+	// e.PUT("/users/:user_id", userHandler.UpdateAccount, middlewares.JWTMiddleware())
+	// e.DELETE("/users/:user_id", userHandler.RemoveAccount, middlewares.JWTMiddleware())
 }
 
 func initClassRouter(db *gorm.DB, e *echo.Echo) {
@@ -57,4 +73,5 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	initUserRouter(db, e)
 	initClassRouter(db, e)
 	initMenteeRouter(db, e)
+	initLogRouter(db, e)
 }

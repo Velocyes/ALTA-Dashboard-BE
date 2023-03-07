@@ -11,12 +11,14 @@ import (
 )
 
 type LogHandler struct {
-	logService logs.LogServiceInterface
+	logService logs.LogServiceInterface_
+	jwt        middlewares.JWTMiddleware_
 }
 
-func New(logService logs.LogServiceInterface) *LogHandler {
+func New(logService logs.LogServiceInterface_, jwt middlewares.JWTMiddleware_) logs.LogDeliveryInterface_ {
 	return &LogHandler{
 		logService: logService,
+		jwt:        jwt,
 	}
 }
 
@@ -66,62 +68,3 @@ func (logHandler *LogHandler) GetLogDataByMenteeId(c echo.Context) error {
 	dataResponse["data"] = listEntityToResponse(logEntities.([]logs.LogEntity))
 	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessReadUserData, dataResponse))
 }
-
-// func (logHandler *LogHandler) UpdateLog(c echo.Context) error {
-// 	logId, errCasting := strconv.Atoi(c.Param("log_id"))
-// 	if errCasting != nil {
-// 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
-// 	}
-
-// 	loggedInUserId, loggedInUserRole, err := middlewares.ExtractToken(c)
-// 	if err != nil {
-// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
-// 	}
-
-// 	userInput := UserRequest{}
-// 	err = c.Bind(&userInput)
-// 	if err != nil {
-// 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_ErrorBindUserData))
-// 	}
-// 	userEntity := requestToEntity(userInput)
-
-// 	userEntity, err = userHandler.userService.ModifyData(loggedInUserId, uint(userId), loggedInUserRole, userEntity)
-// 	if err != nil {
-// 		if err.Error() == consts.SERVER_ForbiddenRequest{
-// 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-// 		} else if err == gorm.ErrRecordNotFound {
-// 			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
-// 		} else if err.Error() == consts.USER_FailedUpdate{
-// 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_FailedUpdate))
-// 		}
-// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
-// 	}
-
-// 	return c.JSON(http.StatusNoContent, helper.SuccessWithDataResponse(consts.USER_SuccessUpdateUserData, entityToResponse(userEntity)))
-// }
-
-// func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
-// 	userId, errCasting := strconv.Atoi(c.Param("id"))
-// 	if errCasting != nil {
-// 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
-// 	}
-
-// 	loggedInUserId, loggedInUserRole, err := middlewares.ExtractToken(c)
-// 	if err != nil {
-// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
-// 	}
-
-// 	err = userHandler.userService.Remove(loggedInUserId, uint(userId), loggedInUserRole)
-// 	if err != nil {
-// 		if err.Error() == consts.SERVER_ForbiddenRequest{
-// 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-// 		} else if err == gorm.ErrRecordNotFound {
-// 			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
-// 		} else if err.Error() == consts.USER_FailedDelete{
-// 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_FailedUpdate))
-// 		}
-// 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.USER_FailedDelete))
-// 	}
-
-// 	return c.JSON(http.StatusNoContent, helper.SuccessResponse(consts.USER_SuccessDelete))
-// }

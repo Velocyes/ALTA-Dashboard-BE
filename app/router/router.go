@@ -22,7 +22,7 @@ import (
 func initUserRouter(db *gorm.DB, e *echo.Echo) {
 	userData := _userData.New(db)
 	userService := _userService.New(userData)
-	userHandler := _userHandler.New(userService)
+	userHandler := _userHandler.New(userService, middlewares.NewJWT())
 
 	e.GET("/users", userHandler.GetAllUser)
 	e.GET("/users/:id", userHandler.GetUserData, middlewares.JWTMiddleware())
@@ -35,7 +35,7 @@ func initUserRouter(db *gorm.DB, e *echo.Echo) {
 func initLogRouter(db *gorm.DB, e *echo.Echo) {
 	logData := _logData.New(db)
 	logService := _logService.New(logData)
-	logHandler := _logHandler.New(logService)
+	logHandler := _logHandler.New(logService, middlewares.NewJWT())
 
 	e.POST("/logs", logHandler.AddLog, middlewares.JWTMiddleware())
 	e.GET("/mentees/:id/logs", logHandler.GetLogDataByMenteeId)

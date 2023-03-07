@@ -13,7 +13,7 @@ type logQuery struct {
 	db *gorm.DB
 }
 
-func New(db *gorm.DB) logs.LogDataInterface {
+func New(db *gorm.DB) logs.LogDataInterface_ {
 	return &logQuery{
 		db: db,
 	}
@@ -51,33 +51,3 @@ func (logQuery *logQuery) SelectData(searchedMenteeId uint, limit, offset int) (
 	}
 	return dataResponse, nil
 }
-
-// func (userQuery *userQuery) UpdateData(input users.UserEntity) (users.UserEntity, error) {
-// 	inputedUserGorm, updatedUserGorm := EntityToGorm(input), User{}
-// 	txUpdate := userQuery.db.Model(&inputedUserGorm).Updates(inputedUserGorm)
-// 	if txUpdate.Error != nil {
-// 		if txUpdate.RowsAffected == 0 {
-// 			return users.UserEntity{}, errors.New(consts.USER_FailedUpdate)
-// 		}
-// 		return users.UserEntity{}, errors.New(consts.SERVER_InternalServerError)
-// 	}
-
-// 	userQuery.db.Model(inputedUserGorm).Find(&updatedUserGorm)
-// 	return GormToEntity(updatedUserGorm), nil
-// }
-
-// func (userQuery *userQuery) Delete(userId uint) error {
-// 	selectedUserGorm, err := userQuery.SelectData(userId)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	txDelete := userQuery.db.Model(&selectedUserGorm).Where("id = ?", userId).Delete(&selectedUserGorm)
-// 	if txDelete.Error != nil {
-// 		if txDelete.RowsAffected == 0 {
-// 			return errors.New(consts.USER_FailedDelete)
-// 		}
-// 		return errors.New(consts.SERVER_InternalServerError)
-// 	}
-// 	return nil
-// }

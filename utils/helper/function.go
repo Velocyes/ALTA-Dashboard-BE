@@ -29,12 +29,12 @@ func ExtractPageLimit(c echo.Context) (page int, limit int, err error) {
 	pageStr := c.QueryParam("page")
 	page, err = strconv.Atoi(pageStr)
 	if err != nil {
-		return 0, 0, errors.New(consts.ECHO_InvaildPageParam)
+		return -1, -1, errors.New(consts.ECHO_InvaildPageParam)
 	}
 	limitStr := c.QueryParam("limit")
 	limit, err = strconv.Atoi(limitStr)
 	if err != nil {
-		return 0, 0, errors.New(consts.ECHO_InvaildLimitParam)
+		return -1, -1, errors.New(consts.ECHO_InvaildLimitParam)
 	}
 	return page, limit, nil
 }

@@ -48,7 +48,7 @@ func initLogRouter(db *gorm.DB, e *echo.Echo) {
 func initClassRouter(db *gorm.DB, e *echo.Echo) {
 	classData := _classData.New(db)
 	classService := _classService.New(classData)
-	classHandler := _classHandler.New(classService)
+	classHandler := _classHandler.New(classService, middlewares.NewJWT())
 
 	e.GET("/classes", classHandler.GetAll)
 	e.GET("/classes/:id", classHandler.GetOne, middlewares.JWTMiddleware())
@@ -60,7 +60,7 @@ func initClassRouter(db *gorm.DB, e *echo.Echo) {
 func initMenteeRouter(db *gorm.DB, e *echo.Echo) {
 	menteeData := _menteeData.New(db)
 	menteeService := _menteeService.New(menteeData)
-	menteeHandler := _menteeHandler.New(menteeService)
+	menteeHandler := _menteeHandler.New(menteeService, middlewares.NewJWT())
 
 	e.GET("/mentees", menteeHandler.GetAll)
 	e.GET("/mentees/:id", menteeHandler.GetOne, middlewares.JWTMiddleware())

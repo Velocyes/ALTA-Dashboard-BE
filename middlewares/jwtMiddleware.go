@@ -1,15 +1,31 @@
 package middlewares
 
 import (
-	"errors"
 	"alta-dashboard-be/app/config"
 	"alta-dashboard-be/utils/consts"
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	echoJwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 )
+
+//go:generate mockery --name JWTMiddleware_ --output ../mocks
+type JWTMiddleware_ interface {
+	ExtractToken(e echo.Context) (uint, string, error)
+}
+
+type JWT struct{}
+
+// ExtractToken implements JWTMiddleware_
+func (u *JWT) ExtractToken(e echo.Context) (uint, string, error) {
+	return ExtractToken(e)
+}
+
+func NewJWT() JWTMiddleware_ {
+	return &JWT{}
+}
 
 func JWTMiddleware() echo.MiddlewareFunc {
 	return echoJwt.WithConfig(echoJwt.Config{
@@ -36,7 +52,7 @@ func ExtractToken(e echo.Context) (uint, string, error) {
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return  0, "", errors.New(consts.JWT_FailedCastingJwtToken)
+		return 0, "", errors.New(consts.JWT_FailedCastingJwtToken)
 	}
 	if token.Valid {
 		loggedInUserId, existedUserId := claims[consts.JWT_UserId].(float64)

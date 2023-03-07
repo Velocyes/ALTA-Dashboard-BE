@@ -12,12 +12,13 @@ import (
 
 type MenteeDelivery struct {
 	service mentee.MenteeService_
+	jwt     middlewares.JWTMiddleware_
 }
 
 // Create implements mentee.MenteeDelivery_
 func (u *MenteeDelivery) Create(c echo.Context) error {
 	//extract userID from jwt
-	userID, _, err := middlewares.ExtractToken(c)
+	userID, _, err := u.jwt.ExtractToken(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("invalid or expired jwt"))
 	}
@@ -44,7 +45,7 @@ func (u *MenteeDelivery) Create(c echo.Context) error {
 // Delete implements mentee.MenteeDelivery_
 func (u *MenteeDelivery) Delete(c echo.Context) error {
 	//extract userID from jwt
-	userID, _, err := middlewares.ExtractToken(c)
+	userID, _, err := u.jwt.ExtractToken(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("invalid or expired jwt"))
 	}
@@ -96,7 +97,7 @@ func (u *MenteeDelivery) GetOne(c echo.Context) error {
 // Update implements mentee.MenteeDelivery_
 func (u *MenteeDelivery) Update(c echo.Context) error {
 	//get user id from jwt
-	userID, _, err := middlewares.ExtractToken(c)
+	userID, _, err := u.jwt.ExtractToken(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("invalid or expired token"))
 	}
@@ -127,8 +128,9 @@ func (u *MenteeDelivery) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, helper.SuccessResponse(fmt.Sprintf("class with id %d updated", id)))
 }
 
-func New(service mentee.MenteeService_) mentee.MenteeDelivery_ {
+func New(service mentee.MenteeService_, jwt middlewares.JWTMiddleware_) mentee.MenteeDelivery_ {
 	return &MenteeDelivery{
 		service: service,
+		jwt:     jwt,
 	}
 }

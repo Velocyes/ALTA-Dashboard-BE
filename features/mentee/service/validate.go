@@ -42,11 +42,11 @@ func validate(u *mentee.MenteeCore) error {
 	if err != nil {
 		return err
 	}
-	err = validateAlphanumericSpaceOnly(u.FullName, "full_name")
+	err = validateAlphabetSpaceOnly(u.FullName, "full_name")
 	if err != nil {
 		return err
 	}
-	err = validateAlphanumericSpaceOnly(u.EmergencyName, "emergency_name")
+	err = validateAlphabetSpaceOnly(u.EmergencyName, "emergency_name")
 	if err != nil {
 		return err
 	}
@@ -63,6 +63,11 @@ func validate(u *mentee.MenteeCore) error {
 	err = validateAlphanumeric(u.Telegram, "telegram")
 	if err != nil {
 		return err
+	}
+
+	//validate education type
+	if u.EducationType != "IT" && u.EducationType != "NON-IT" {
+		return errors.New("education_type only IT or NON-IT")
 	}
 
 	//validate email
@@ -83,22 +88,29 @@ func validateEmptyString(val map[string]string) error {
 	return nil
 }
 
+func validateAlphabetSpaceOnly(val string, name string) error {
+	if !regexp.MustCompile(`^[ a-zA-Z]+$`).MatchString(val) {
+		return errors.New(fmt.Sprintf("%s must only contain space and alphanumeric", name))
+	}
+	return nil
+}
+
 func validateAlphanumericSpaceOnly(val string, name string) error {
-	if !regexp.MustCompile(`/^[a-z\d\-_\s]+$/i`).MatchString(val) {
+	if !regexp.MustCompile(`^[-_ a-zA-Z0-9]+$`).MatchString(val) {
 		return errors.New(fmt.Sprintf("%s must only contain space and alphanumeric", name))
 	}
 	return nil
 }
 
 func validateAlphanumeric(val string, name string) error {
-	if !regexp.MustCompile(`/^[a-z\d]+$/i`).MatchString(val) {
+	if !regexp.MustCompile(`^[a-zA-Z0-9]+$`).MatchString(val) {
 		return errors.New(fmt.Sprintf("%s must only contain alphanumeric", name))
 	}
 	return nil
 }
 
 func validateNumericOnly(val string, name string) error {
-	if !regexp.MustCompile(`/^[\d+]+$/i`).MatchString(val) {
+	if !regexp.MustCompile(`^[0-9]+$`).MatchString(val) {
 		return errors.New(fmt.Sprintf("%s must only contain numeric", name))
 	}
 	return nil

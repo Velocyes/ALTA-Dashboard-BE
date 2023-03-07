@@ -1,17 +1,18 @@
 package models
 
 import (
+	_classModel "alta-dashboard-be/features/class/models"
+
 	"gorm.io/gorm"
-	_logModel "alta-dashboard-be/features/logs/models"
 )
 
 type User struct {
 	gorm.Model
-	FullName string `gorm:"not null"`
-	Email    string `gorm:"unique;not null"`
-	Password string `gorm:"not null"`
-	Team     string `gorm:"type:enum('Mentor', 'Placement', 'People', 'Admission', 'Academic');default:'Mentor';not null"`
-	Role     string `gorm:"type:enum('User', 'Admin');default:'User';not null"`
-	Status   string `gorm:"type:enum('Active', 'Not-Active', 'Deleted');default:'Active';not null"`
-	Logs     []_logModel.Log
+	FullName string `gorm:"not null;type:varchar(50)"`
+	Email    string `gorm:"not null;unique;type:varchar(50)"`
+	Password string `gorm:"not null;type:text"`
+	Team     string `gorm:"not null;type:enum('Mentor', 'Placement', 'People', 'Admission', 'Academic');default:'Mentor'"`
+	Role     string `gorm:"not null;type:enum('User', 'Admin');default:'User'"`
+	Status   string `gorm:"not null;type:enum('Active', 'Not-Active', 'Deleted');default:'Active'"`
+	Classes  []_classModel.Class
 }

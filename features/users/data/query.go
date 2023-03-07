@@ -31,9 +31,6 @@ func (userQuery *userQuery) Login(email string, password string) (users.UserEnti
 	loggedInUserGorm := _userModel.User{}
 	txSelect := userQuery.db.Where("email = ?", email).First(&loggedInUserGorm)
 	if txSelect.Error != nil {
-		if txSelect.Error == gorm.ErrInvalidDB {
-			return users.UserEntity{}, "", errors.New(gorm.ErrInvalidDB.Error())
-		}
 		if txSelect.Error == gorm.ErrRecordNotFound {
 			return users.UserEntity{}, "", errors.New(gorm.ErrRecordNotFound.Error())
 		}
@@ -57,9 +54,6 @@ func (userQuery *userQuery) Insert(input users.UserEntity) (users.UserEntity, er
 	userGorm := EntityToGorm(input)
 	txInsert := userQuery.db.Create(&userGorm)
 	if txInsert.Error != nil {
-		if txInsert.Error == gorm.ErrInvalidDB {
-			return users.UserEntity{}, errors.New(gorm.ErrInvalidDB.Error())
-		}
 		if strings.Contains(txInsert.Error.Error(), "Error 1062 (23000)") {
 			return users.UserEntity{}, errors.New(consts.USER_EmailAlreadyUsed)
 		}
@@ -75,10 +69,6 @@ func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error)
 	txCount := userQuery.db.Table("users").Count(&dataCount)
 	txSelect := userQuery.db.Limit(limit).Offset(offset).Find(&usersGorm)
 	if txSelect.Error != nil || txCount.Error != nil {
-		if txSelect.Error == gorm.ErrInvalidDB {
-			return nil, errors.New(gorm.ErrInvalidDB.Error())
-		}
-		
 		return nil, errors.New(consts.SERVER_InternalServerError)
 	}
 
@@ -97,12 +87,6 @@ func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
 	userGorm := _userModel.User{}
 	txSelect := userQuery.db.Find(&userGorm, userId)
 	if txSelect.Error != nil {
-		if txSelect.Error == gorm.ErrInvalidDB {
-			return users.UserEntity{}, errors.New(gorm.ErrInvalidDB.Error())
-		}
-		if txSelect.Error == gorm.ErrRecordNotFound {
-			return users.UserEntity{}, errors.New(gorm.ErrRecordNotFound.Error())
-		}
 		return users.UserEntity{}, errors.New(consts.SERVER_InternalServerError)
 	}
 
@@ -113,9 +97,9 @@ func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
 func (userQuery *userQuery) UpdateData(input users.UserEntity) (users.UserEntity, error) {
 	inputedUserGorm, updatedUserGorm := EntityToGorm(input), _userModel.User{}
 	txUpdate := userQuery.db.Model(&inputedUserGorm).Updates(inputedUserGorm)
-	if txUpdate.Error != nil {
-		if txUpdate.RowsAffected == 0 {
-			return users.UserEntity{}, errors.New(consts.USER_FailedUpdate)
+	if txUpdate.Error != nil || txUpdate.RowsAffected == 0 {
+		if txUpdate.Error == gorm.ErrRecordNotFound {
+			return users.UserEntity{}, errors.New(gorm.ErrRecordNotFound.Error())
 		}
 		return users.UserEntity{}, errors.New(consts.SERVER_InternalServerError)
 	}
@@ -131,9 +115,9 @@ func (userQuery *userQuery) Delete(userId uint) error {
 	}
 
 	txDelete := userQuery.db.Model(&selectedUserGorm).Where("id = ?", userId).Delete(&selectedUserGorm)
-	if txDelete.Error != nil {
-		if txDelete.RowsAffected == 0 {
-			return errors.New(consts.USER_FailedDelete)
+	if txDelete.Error != nil || txDelete.RowsAffected == 0 {
+		if txDelete.Error == gorm.ErrRecordNotFound {
+			return errors.New(gorm.ErrRecordNotFound.Error())
 		}
 		return errors.New(consts.SERVER_InternalServerError)
 	}

@@ -22,7 +22,7 @@ func New(userService users.UserServiceInterface) *UserHandler {
 }
 
 func (userHandler *UserHandler) Login(c echo.Context) error {
-	loginInput := UserLogin{}
+	loginInput := users.UserLogin{}
 	err := c.Bind(&loginInput)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.USER_ErrorBindUserData))
@@ -46,7 +46,7 @@ func (userHandler *UserHandler) Login(c echo.Context) error {
 }
 
 func (userHandler *UserHandler) Register(c echo.Context) error {
-	userInput := UserRegister{}
+	userInput := users.UserRegister{}
 	err := c.Bind(&userInput)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.USER_ErrorBindUserData))
@@ -127,7 +127,7 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 
-	userInput := UserRequest{}
+	userInput := users.UserRequest{}
 	err = c.Bind(&userInput)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_ErrorBindUserData))

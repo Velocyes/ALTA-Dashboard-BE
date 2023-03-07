@@ -32,9 +32,7 @@ func (userHandler *UserHandler) Login(c echo.Context) error {
 	if err != nil {
 		if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
-		} else if err == gorm.ErrRecordNotFound {
-			return c.JSON(http.StatusNotFound, helper.FailedResponse(consts.SERVER_InternalServerError))
-		}
+		} 
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
 	}
 

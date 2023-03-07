@@ -12,12 +12,13 @@ import (
 
 type ClassDelivery struct {
 	service class.ClassService_
+	jwt     middlewares.JWTMiddleware_
 }
 
 // Create implements class.ClassDelivery_
 func (u *ClassDelivery) Create(c echo.Context) error {
 	//get user id from jwt
-	id, _, err := middlewares.ExtractToken(c)
+	id, _, err := u.jwt.ExtractToken(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("invalid or expired token"))
 	}
@@ -45,7 +46,7 @@ func (u *ClassDelivery) Create(c echo.Context) error {
 // Delete implements class.ClassDelivery_
 func (u *ClassDelivery) Delete(c echo.Context) error {
 	//get user id from jwt
-	userID, _, err := middlewares.ExtractToken(c)
+	userID, _, err := u.jwt.ExtractToken(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("invalid or expired token"))
 	}
@@ -106,7 +107,7 @@ func (u *ClassDelivery) GetOne(c echo.Context) error {
 // Update implements class.ClassDelivery_
 func (u *ClassDelivery) Update(c echo.Context) error {
 	//get user id from jwt
-	userID, _, err := middlewares.ExtractToken(c)
+	userID, _, err := u.jwt.ExtractToken(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helper.FailedResponse("invalid or expired token"))
 	}
@@ -137,8 +138,9 @@ func (u *ClassDelivery) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, helper.SuccessResponse(fmt.Sprintf("class with id %d updated", id)))
 }
 
-func New(service class.ClassService_) class.ClassDelivery_ {
+func New(service class.ClassService_, jwt middlewares.JWTMiddleware_) class.ClassDelivery_ {
 	return &ClassDelivery{
 		service: service,
+		jwt:     jwt,
 	}
 }

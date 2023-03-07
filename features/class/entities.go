@@ -33,6 +33,7 @@ type ClassResponse struct {
 	UserID    int    `json:"user_id"`
 }
 
+//go:generate mockery --name ClassData_ --output ../../mocks
 type ClassData_ interface {
 	Create(class ClassCore) error
 	GetAll(page int, limit int) ([]ClassCore, error)
@@ -41,12 +42,22 @@ type ClassData_ interface {
 	Delete(id int) error
 }
 
+//go:generate mockery --name ClassService_ --output ../../mocks
 type ClassService_ interface {
 	Create(userID int, class ClassCore) error
 	GetAll(page int, limit int) ([]ClassCore, error)
 	GetOne(id int) (ClassCore, error)
 	Update(userID int, id int, class ClassCore) error
 	Delete(userID int, id int) error
+}
+
+//go:generate mockery --name ClassDelivery_ --output ../../mocks
+
+type EchoClassContext interface {
+	Bind(interface{}) error
+	Param(string) string
+	QueryParam(string) string
+	JSON(int, interface{}) error
 }
 
 type ClassDelivery_ interface {

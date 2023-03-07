@@ -37,9 +37,6 @@ func (logHandler *LogHandler) AddLog(c echo.Context) error {
 
 	logEntity, err := logHandler.logService.Create(inputedLogEntity, loggedInUserId)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 

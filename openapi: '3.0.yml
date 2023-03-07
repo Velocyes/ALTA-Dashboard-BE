@@ -3,7 +3,7 @@ info:
   title: Immersive Dashboard App API
   version: '1.0'
 servers:
-  - url: https://api.server.test/v1
+  - url: http://104.198.56.90
 paths:
   /users:
     get:
@@ -247,6 +247,13 @@ paths:
       security:
         - JWTAuth: []
       parameters:
+        - name: user_id
+          description: "User's id of the user you want to search for"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
         - name: "full_name"
           description: "User's full name"
           required: true
@@ -377,28 +384,28 @@ paths:
         - name: title
           description: "Log's title"
           required: true
-          in: path
+          in: query
           schema:
             type: integer
             example: "Lorem Ipsum"
         - name: status
           description: "Mentee's status change logs"
           required: true
-          in: path
+          in: query
           schema:
             type: integer
             example: "Join Class"
         - name: feedback
           description: "Mentee's feedback logs"
           required: true
-          in: path
+          in: query
           schema:
             type: string
             example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         - name: mentee_id
           description: "Mentee's id you want to assigned for"
           required: true
-          in: path
+          in: query
           schema:
             type: integer
             example: 1

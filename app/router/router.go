@@ -25,11 +25,11 @@ func initUserRouter(db *gorm.DB, e *echo.Echo) {
 	userHandler := _userHandler.New(userService)
 
 	e.GET("/users", userHandler.GetAllUser)
-	e.GET("/users/:user_id", userHandler.GetUserData, middlewares.JWTMiddleware())
+	e.GET("/users/:id", userHandler.GetUserData, middlewares.JWTMiddleware())
 	e.POST("/users/login", userHandler.Login)
 	e.POST("/users", userHandler.Register, middlewares.JWTMiddleware())
-	e.PUT("/users/:user_id", userHandler.UpdateAccount, middlewares.JWTMiddleware())
-	e.DELETE("/users/:user_id", userHandler.RemoveAccount, middlewares.JWTMiddleware())
+	e.PUT("/users/:id", userHandler.UpdateAccount, middlewares.JWTMiddleware())
+	e.DELETE("/users/:id", userHandler.RemoveAccount, middlewares.JWTMiddleware())
 }
 
 func initLogRouter(db *gorm.DB, e *echo.Echo) {
@@ -38,7 +38,7 @@ func initLogRouter(db *gorm.DB, e *echo.Echo) {
 	logHandler := _logHandler.New(logService)
 
 	e.POST("/logs", logHandler.AddLog, middlewares.JWTMiddleware())
-	e.GET("/mentees/:mentee_id/logs", logHandler.GetLogDataByMenteeId)
+	e.GET("/mentees/:id/logs", logHandler.GetLogDataByMenteeId)
 	// e.POST("/users/login", userHandler.Login)
 	// e.POST("/users", userHandler.Register, middlewares.JWTMiddleware())
 	// e.PUT("/users/:user_id", userHandler.UpdateAccount, middlewares.JWTMiddleware())

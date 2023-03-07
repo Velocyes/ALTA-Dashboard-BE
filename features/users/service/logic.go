@@ -94,6 +94,11 @@ func (userService *userService) ModifyData(loggedInUserId, userId uint, loggedIn
 	}
 
 	userInput.Id = userId
+	err := userService.validate.Struct(userInput)
+	if err != nil {
+		return users.UserEntity{}, err
+	}
+	
 	userEntity, err := userService.userData.UpdateData(userInput)
 	if err != nil {
 		return users.UserEntity{}, err

@@ -3,6 +3,7 @@ package data
 import (
 	"errors"
 	"alta-dashboard-be/features/users"
+	_userModel "alta-dashboard-be/features/users/models"
 	"alta-dashboard-be/middlewares"
 	"alta-dashboard-be/utils/consts"
 	"strings"
@@ -27,7 +28,7 @@ func CompareHashPassword(inputPassword, dbPassword string) bool {
 }
 
 func (userQuery *userQuery) Login(email string, password string) (users.UserEntity, string, error) {
-	loggedInUserGorm := User{}
+	loggedInUserGorm := _userModel.User{}
 	txSelect := userQuery.db.Where("email = ?", email).First(&loggedInUserGorm)
 	if txSelect.Error != nil {
 		if txSelect.Error == gorm.ErrInvalidDB {
@@ -67,7 +68,7 @@ func (userQuery *userQuery) Insert(input users.UserEntity) (users.UserEntity, er
 }
 
 func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error) {
-	usersGorm, dataCount, dataResponse := []User{}, int64(0), map[string]any{}
+	usersGorm, dataCount, dataResponse := []_userModel.User{}, int64(0), map[string]any{}
 	txCount := userQuery.db.Table("users").Count(&dataCount)
 	txSelect := userQuery.db.Limit(limit).Offset(offset).Find(&usersGorm)
 	if txSelect.Error != nil || txCount.Error != nil {
@@ -89,7 +90,7 @@ func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error)
 }
 
 func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
-	userGorm := User{}
+	userGorm := _userModel.User{}
 	txSelect := userQuery.db.Find(&userGorm, userId)
 	if txSelect.Error != nil {
 		if txSelect.Error == gorm.ErrInvalidDB {
@@ -103,7 +104,7 @@ func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
 }
 
 func (userQuery *userQuery) UpdateData(input users.UserEntity) (users.UserEntity, error) {
-	inputedUserGorm, updatedUserGorm := EntityToGorm(input), User{}
+	inputedUserGorm, updatedUserGorm := EntityToGorm(input), _userModel.User{}
 	txUpdate := userQuery.db.Model(&inputedUserGorm).Updates(inputedUserGorm)
 	if txUpdate.Error != nil {
 		if txUpdate.RowsAffected == 0 {

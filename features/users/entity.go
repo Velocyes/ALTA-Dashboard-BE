@@ -16,6 +16,40 @@ type UserEntity struct {
 	UpdatedAt time.Time
 }
 
+type UserRequest struct {
+	Id       uint   `json:"id"`
+	FullName string `json:"full_name" form:"full_name"`
+	Email    string `json:"email" form:"email"`
+	Team     string `json:"team" form:"team"`
+	Role     string `json:"role" form:"role"`
+	Status   string `json:"status" form:"status"`
+}
+
+type UserLogin struct {
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
+}
+
+type UserRegister struct {
+	FullName string `json:"full_name" form:"full_name"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
+	Team     string `json:"team" form:"team"`
+	Role     string `json:"role" form:"role"`
+	Status   string `json:"status" form:"status"`
+}
+
+type UserResponse struct {
+	Id       uint   `json:"id"`
+	FullName string `json:"full_name"`
+	Email    string `json:"email"`
+	Team     string `json:"team"`
+	Role     string `json:"role"`
+	Status   string `json:"status"`
+}
+
+
+
 type UserServiceInterface interface {
 	Login(email string, password string) (UserEntity, string, error)
 	Create(input UserEntity, loggedInUserRole string) (UserEntity, error)

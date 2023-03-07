@@ -6,7 +6,6 @@ import (
 	"alta-dashboard-be/utils/consts"
 	"alta-dashboard-be/utils/helper"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -44,28 +43,18 @@ func (logHandler *LogHandler) AddLog(c echo.Context) error {
 }
 
 func (logHandler *LogHandler) GetLogDataByMenteeId(c echo.Context) error {
-	page, limit, pageParam, limitParam, menteeIdParam := -1, -1, c.QueryParam("page"), c.QueryParam("limit"), c.Param("mentee_id")
-	searchedMenteeId, err := strconv.Atoi(menteeIdParam)
+	page, limit, err := helper.ExtractPageLimit(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
+		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
-	if pageParam != "" {
-		castedPageParam, errCasting := strconv.Atoi(pageParam)
-		if errCasting != nil {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
-		}
-		page = castedPageParam
-	}
-	if limitParam != "" {
-		castedLimitParam, errCasting := strconv.Atoi(limitParam)
-		if errCasting != nil {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.ECHO_InvalidParam))
-		}
-		limit = castedLimitParam
+
+	menteeId, err := helper.ExtractIDParam(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
 
 	limit, offset := helper.LimitOffsetConvert(page, limit)
-	dataResponse, err := logHandler.logService.GetData(uint(searchedMenteeId), limit, offset)
+	dataResponse, err := logHandler.logService.GetData(uint(menteeId), limit, offset)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}

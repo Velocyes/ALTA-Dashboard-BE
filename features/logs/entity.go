@@ -7,7 +7,7 @@ import (
 type LogEntity struct {
 	Id        uint
 	Title     string `validate:"required"`
-	Status    string `validate:"required"`
+	Status    string 
 	Feedback  string `validate:"required"`
 	UserID    uint   `validate:"required"`
 	MenteeID  uint   `validate:"required"`

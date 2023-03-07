@@ -78,6 +78,7 @@ func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error)
 		if txSelect.Error == gorm.ErrInvalidDB {
 			return nil, errors.New(gorm.ErrInvalidDB.Error())
 		}
+		
 		return nil, errors.New(consts.SERVER_InternalServerError)
 	}
 
@@ -98,6 +99,9 @@ func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
 	if txSelect.Error != nil {
 		if txSelect.Error == gorm.ErrInvalidDB {
 			return users.UserEntity{}, errors.New(gorm.ErrInvalidDB.Error())
+		}
+		if txSelect.Error == gorm.ErrRecordNotFound {
+			return users.UserEntity{}, errors.New(gorm.ErrRecordNotFound.Error())
 		}
 		return users.UserEntity{}, errors.New(consts.SERVER_InternalServerError)
 	}

@@ -38,6 +38,9 @@ func (logHandler *LogHandler) AddLog(c echo.Context) error {
 
 	logEntity, err := logHandler.logService.Create(inputedLogEntity, loggedInUserId)
 	if err != nil {
+		if err.Error() == consts.VALIDATION_InvalidInput {
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
+		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 

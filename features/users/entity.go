@@ -10,7 +10,7 @@ type UserEntity struct {
 	Id        uint
 	FullName  string `validate:"required"`
 	Email     string `validate:"required,email"`
-	Password  string `validate:"required"`
+	Password  string 
 	Team      string
 	Role      string
 	Status    string

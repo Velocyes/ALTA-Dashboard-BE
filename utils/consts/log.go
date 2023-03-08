@@ -15,10 +15,14 @@ const (
 
 // Response Success
 const (
-
 	// Insert
 	LOG_SuccessAddLogData string = "succesfully insert log data"
 
 	// Select
 	LOG_SuccessReadLogData string = "succesfully read log data"
+)
+
+// Response failed
+const (
+	LOG_MenteeNotExisted string = "mentee not existed"
 )

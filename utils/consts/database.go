@@ -1,5 +1,5 @@
 package consts
 
 const (
-	DATABASE_InvaildQueryRequest string = "invalid query request"
+	DATABASE_InvaildQueryParameter string = "invalid query parameter"
 )

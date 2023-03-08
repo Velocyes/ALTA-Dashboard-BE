@@ -5,6 +5,7 @@ import (
 	_logModel "alta-dashboard-be/features/logs/models"
 	"alta-dashboard-be/utils/consts"
 	"errors"
+	"math"
 	"strings"
 
 	"gorm.io/gorm"
@@ -43,7 +44,7 @@ func (logQuery *logQuery) SelectData(searchedMenteeId uint, limit, offset int) (
 	}
 
 	logEntities := ListGormToEntity(logsGorm)
-	dataResponse["total_page"] = int(dataCount) / limit
+	dataResponse["total_page"] = math.Round(float64(dataCount)/float64(int64(limit)))
 	dataResponse["page"] = (offset / limit) + 1
 	dataResponse["data"] = logEntities
 	return dataResponse, nil

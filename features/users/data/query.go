@@ -7,6 +7,7 @@ import (
 	"alta-dashboard-be/utils/consts"
 	"errors"
 	"fmt"
+	"math"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -77,13 +78,9 @@ func (userQuery *userQuery) SelectAll(queryParams map[string]any, limit, offset 
 	}
 
 	userEntities := ListGormToEntity(usersGorm)
-	if limit != -1 {
-		dataResponse["total_page"] = int(dataCount) / limit
-		dataResponse["page"] = (offset / limit) + 1
-		dataResponse["data"] = userEntities
-	} else {
-		dataResponse["data"] = userEntities
-	}
+	dataResponse["total_page"] = math.Round(float64(dataCount)/float64(int64(limit)))
+	dataResponse["page"] = (offset / limit) + 1
+	dataResponse["data"] = userEntities
 	return dataResponse, nil
 }
 

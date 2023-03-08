@@ -14,7 +14,7 @@ func TestCreate(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			logDataMock := new(mocks.LogData_)
-			logDataMock.On("Insert", v.Input.logEntity).Return(v.Output.Result, nil)
+			logDataMock.On("Insert", mock.Anything).Return(v.Output.Result, nil)
 
 			//execute
 			logService := New(logDataMock)

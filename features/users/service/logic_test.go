@@ -56,8 +56,6 @@ func TestGetAll(t *testing.T) {
 			userDataMock := new(mocks.UserData_)
 			userDataMock.On("SelectAll", mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, nil)
 
-			userDataMock := new(mocks.userQuery_)
-
 			//execute
 			userService := New(userDataMock)
 			_, err := userService.GetAll(v.Input.limit, v.Input.offset)

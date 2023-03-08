@@ -38,12 +38,8 @@ func (logHandler *LogHandler) AddLog(c echo.Context) error {
 
 	logEntity, err := logHandler.logService.Create(inputedLogEntity, loggedInUserId)
 	if err != nil {
-		if err.Error() == consts.VALIDATION_InvalidInput {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
-		} else if err.Error() == consts.LOG_MenteeNotExisted {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.LOG_MenteeNotExisted))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateLogFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
 	return c.JSON(http.StatusCreated, helper.SuccessWithDataResponse(consts.LOG_SuccessAddLogData, entityToResponse(logEntity)))
@@ -63,7 +59,8 @@ func (logHandler *LogHandler) GetLogDataByMenteeId(c echo.Context) error {
 	limit, offset := helper.LimitOffsetConvert(page, limit)
 	dataResponse, err := logHandler.logService.GetData(uint(menteeId), limit, offset)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateLogFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
 	logEntities, exist := dataResponse["data"]

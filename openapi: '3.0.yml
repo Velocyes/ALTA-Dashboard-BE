@@ -1,8 +1,11 @@
 openapi: '3.0.2'
 info:
   title: Immersive Dashboard App API
-  version: 1.0.0
+  version: 2.0.0
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ASPEAKER427_1/immersive-dashboard-app_api/2.0.0
   - url: http://104.198.56.90
 paths:
   /users:
@@ -13,12 +16,14 @@ paths:
       description: Get all users data
       parameters:
         - name: "page"
+          required: true
           in: query
           schema:
             type: integer
             example: 1
         - name: limit
           description: "Limit data per page"
+          required: true
           in: query
           schema:
             type: integer
@@ -49,8 +54,26 @@ paths:
                         team: "Mentor"
                         role: "User"
                         status: "Active"
+                  
+        '400':
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                invalid page parameter:
+                  $ref: '#/components/examples/invalidPageParameter'
+        
         '500':
-          $ref: '#/components/responses/500'
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
 
     post:
       tags:
@@ -58,50 +81,7 @@ paths:
       security:
         - JWTAuth: []
       summary: add user
-      description: Register user
-      parameters:
-        - name: "full_name"
-          description: "User's full name"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko"
-        - name: email
-          description: "User's email"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko@gmail.com"
-        - name: password
-          description: "User's account password"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "qwerty"
-        - name: team
-          description: "User's account in Alterra"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Mentor"
-        - name: role
-          description: "User's account role"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "User"
-        - name: status
-          description: "User's account status"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Active"
+      description: Register user (skema data bisa dilihat dipaling bawah)
       requestBody:
         required: true
         content:
@@ -132,10 +112,28 @@ paths:
                       status: "Active"
                   
         '400':
-          $ref: '#/components/responses/400'
-          
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                forbidden request:
+                  $ref: '#/components/examples/forbiddenRequest'
+                empty credential error:
+                  $ref: '#/components/examples/emptyCredentialError'
+                email already used:
+                  $ref: '#/components/examples/emailAlreadyUsed'
+        
         '500':
-          $ref: '#/components/responses/500'
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
 
   /users/login:
     post:
@@ -143,21 +141,6 @@ paths:
         - Users
       summary: login
       description: Login with email and password
-      parameters:
-        - name: email
-          description: "User's email"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko@gmail.com"
-        - name: password
-          description: "User's account password"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "qwerty"
         
       requestBody:
         required: true
@@ -190,13 +173,38 @@ paths:
                         status: "Active"
 
         '400':
-          $ref: '#/components/responses/400'
-
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                empty credential error:
+                  $ref: '#/components/examples/emptyCredentialError'
+                wrong password:
+                  $ref: '#/components/examples/wrongPassword'
+                  
         '404':
-          $ref: '#/components/responses/404'
-
+          description: Failed response caused by data not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                record not found:
+                  $ref: '#/components/examples/recordNotFound'
+        
         '500':
-          $ref: '#/components/responses/500'
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                error bind user data:
+                  $ref: '#/components/examples/errorBindUserData'
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
 
   /users/{user_id}:
     get:
@@ -232,18 +240,44 @@ paths:
                       team: "Mentor"
                       role: "User"
                       status: "Active"
-
+                      
         '400':
-          $ref: '#/components/responses/400'
-
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                invalid id parameter:
+                  $ref: '#/components/examples/invalidIdParameter'
+                forbidden request:
+                  $ref: '#/components/examples/forbiddenRequest'
+                  
         '404':
-          $ref: '#/components/responses/404'
+          description: Failed response caused by data not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                record not found:
+                  $ref: '#/components/examples/recordNotFound'
+        
+        '500':
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
 
     put:
       tags:
         - Users
       summary: update user by id
-      description: Update user's data by id
+      description: Update user's data by id (skema data bisa dilihat di paling bawah)
       security:
         - JWTAuth: []
       parameters:
@@ -254,48 +288,7 @@ paths:
           schema:
             type: integer
             example: 1
-        - name: "full_name"
-          description: "User's full name"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko"
-        - name: email
-          description: "User's email"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko@gmail.com"
-        - name: password
-          description: "User's account password"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "qwerty"
-        - name: team
-          description: "User's account in Alterra"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Mentor"
-        - name: role
-          description: "User's account role"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "User"
-        - name: status
-          description: "User's account status"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Active"
+            
       requestBody:
         required: true
         content:
@@ -306,12 +299,12 @@ paths:
                 name: "Joko"
                 email: "Joko@gmail.com"
                 team: "Admission"
-                role: "Admin"
+                role: "User"
                 status: "Active"
 
       responses:
-        '204':
-          description: Success response with return of updated data
+        '200':
+          description: Success response with return of an updated user data
           content:
             application/json:
               schema:
@@ -320,21 +313,46 @@ paths:
                   status: "success"
                   message: "succesfully update user data"
                   data:
-                  - id: 1
-                    name: "Joko"
-                    email: "Joko@gmail.com"
-                    team: "Admission"
-                    role: "Admin"
-                    status: "Active"
-
+                    - id: 1
+                      name: "Joko"
+                      email: "Joko@gmail.com"
+                      team: "Admission"
+                      role: "User"
+                      status: "Active"
+                      
         '400':
-          $ref: '#/components/responses/400'
-
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                invalid input:
+                  $ref: '#/components/examples/invalidInput'
+                forbidden request:
+                  $ref: '#/components/examples/forbiddenRequest'
+                email already used:
+                  $ref: '#/components/examples/emailAlreadyUsed'
+                  
         '404':
-          $ref: '#/components/responses/404'
-
+          description: Failed response caused by data not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                record not found:
+                  $ref: '#/components/examples/recordNotFound'
+        
         '500':
-          $ref: '#/components/responses/500'
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
 
     delete:
       tags:
@@ -353,24 +371,44 @@ paths:
             example: 1
 
       responses:
-        '200':
-          description: Success response for deleting user
+        '204':
+          description: Success response (No Content)
           content:
             application/json:
               schema:
                 type: object
-                example:
-                  status: "success"
-                  message: "succesfully delete user"
-
+                
         '400':
-          $ref: '#/components/responses/400'
-
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                invalid id parameter:
+                  $ref: '#/components/examples/invalidIdParameter'
+                forbidden request:
+                  $ref: '#/components/examples/forbiddenRequest'
+                  
         '404':
-          $ref: '#/components/responses/404'
-
+          description: Failed response caused by data not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                record not found:
+                  $ref: '#/components/examples/recordNotFound'
+        
         '500':
-          $ref: '#/components/responses/500'
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
 
   /logs:
     post:
@@ -380,35 +418,6 @@ paths:
       description: Create new logs
       security:
         - JWTAuth: []
-      parameters:
-        - name: title
-          description: "Log's title"
-          required: true
-          in: query
-          schema:
-            type: integer
-            example: "Lorem Ipsum"
-        - name: status
-          description: "Mentee's status change logs"
-          required: true
-          in: query
-          schema:
-            type: integer
-            example: "Join Class"
-        - name: feedback
-          description: "Mentee's feedback logs"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-        - name: mentee_id
-          description: "Mentee's id you want to assigned for"
-          required: true
-          in: query
-          schema:
-            type: integer
-            example: 1
             
       requestBody:
         required: true
@@ -439,9 +448,101 @@ paths:
                     feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
                     user_id: 1
                     mentee_id: 1
-
+                    
+        '400':
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                invalid input:
+                  $ref: '#/components/examples/invalidInput'
+        
         '500':
-          $ref: '#/components/responses/500'
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
+                  
+  /mentees/{mentee_id}/logs:
+    get:
+      tags:
+        - Logs
+      summary: get logs by mentee id
+      description: Get mentee's log data
+      parameters:
+        - name: mentee_id
+          description: "Mentee id of the log's mentee you want to search for"
+          required: true
+          in: path
+          schema:
+            type: integer
+            example: 1
+        - name: "page"
+          required: true
+          in: query
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          description: "Limit data per page"
+          required: true
+          in: query
+          schema:
+            type: integer
+            example: 2
+            
+      responses:
+        '200':
+          description: Succress reponse with return of list of user datas
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: "success"
+                  message: "succesfully read user data"
+                  data:
+                    total_page: 2
+                    page: 1
+                    data:
+                      - id: 1
+                        title: "Lorem Ipsum"
+                        status: "Join Class"
+                        feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                        user_id: 1
+                        mentee_id: 1
+                      - id: 2
+                        title: "Lorem Ipsum 2"
+                        status: "Continue Section 2"
+                        feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.."
+                        user_id: 1
+                        mentee_id: 2
+                  
+        '400':
+          description: Failed response caused by bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                invalid page parameter:
+                  $ref: '#/components/examples/invalidPageParameter'
+        
+        '500':
+          description: Failed response caused by internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWithoutData'
+              examples:
+                internal server error:
+                  $ref: '#/components/examples/internalServerError'
   /classses/{id}:
     delete:
         tags:
@@ -693,10 +794,7 @@ paths:
       responses:
         '200':
           description: 'success create new mentee'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseWithoutData'
+          
         '400':
           $ref: '#/components/responses/400'
 
@@ -1030,8 +1128,6 @@ components:
           type: string
         message:
           type: string
-        data:
-          type: array
           
     ResponseWithoutData:
       type: object
@@ -1074,3 +1170,53 @@ components:
           example:
             status: "failed"
             message: "{{any message}}"
+            
+  examples:
+    invalidIdParameter:
+      value:
+        status: "failed"
+        message: "invalid id parameter"
+    invalidPageParameter:
+      value:
+        status: "failed"
+        message: "invalid page parameter"
+    invalidLimitParameter:
+      value:
+        status: "failed"
+        message: "invalid limit parameter"
+    forbiddenRequest:
+      value:
+        status: "failed"
+        message: "forbidden request"
+    emptyCredentialError:
+      value:
+        status: "failed"
+        message: "email and password must be filled"
+    recordNotFound:
+      value:
+        status: "failed"
+        message: "record not found"
+    wrongPassword:
+      value:
+        status: "failed"
+        message: "wrong password"
+    errorBindUserData:
+      value:
+        status: "failed"
+        message: "error bind user data"
+    errorBindLogData:
+      value:
+        status: "failed"
+        message: "error bind log data"
+    invalidInput:
+      value:
+        status: "failed"
+        message: "invalid input"
+    emailAlreadyUsed:
+      value:
+        status: "failed"
+        message: "email is already used"
+    internalServerError:
+      value:
+        status: "failed"
+        message: "internal server error"

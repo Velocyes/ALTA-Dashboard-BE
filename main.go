@@ -21,6 +21,7 @@ func main() {
 		Format: `[${time_rfc3339}] ${status} ${method} ${host}${path} ${latency_human}` + "\n",
 	}))
 	router.InitRouter(db, e)
+	
 
 	e.Logger.Fatal(e.Start(":8081"))
 }

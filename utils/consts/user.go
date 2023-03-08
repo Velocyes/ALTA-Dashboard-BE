@@ -38,15 +38,6 @@ const (
 
 	// Register
 	USER_EmailAlreadyUsed string = "email is already used"
-
-	// Select
-	USER_FailedSelect string = "failed select user data"
-
-	// Update
-	USER_FailedUpdate string = "failed update user data"
-
-	// Delete
-	USER_FailedDelete string = "failed delete user data"
 )
 
 // Response Success

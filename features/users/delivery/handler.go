@@ -32,14 +32,8 @@ func (userHandler *UserHandler) Login(c echo.Context) error {
 
 	userEntity, token, err := userHandler.userService.Login(loginInput.Email, loginInput.Password)
 	if err != nil {
-		if err.Error() == consts.USER_EmptyCredentialError {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
-		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
-			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
-		} else if err.Error() == consts.USER_WrongPassword {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_WrongPassword))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateUserFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
 	dataResponse := map[string]any{
@@ -65,16 +59,8 @@ func (userHandler *UserHandler) Register(c echo.Context) error {
 
 	userEntity, err := userHandler.userService.Create(inputedUserEntity, loggedInUserRole)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err.Error() == consts.USER_EmptyCredentialError {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
-		} else if err.Error() == consts.VALIDATION_InvalidInput {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
-		} else if err.Error() == consts.USER_EmailAlreadyUsed {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmailAlreadyUsed))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateUserFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
 	return c.JSON(http.StatusCreated, helper.SuccessWithDataResponse(consts.USER_RegisterSuccess, entityToResponse(userEntity)))
@@ -90,10 +76,8 @@ func (userHandler *UserHandler) GetAllUser(c echo.Context) error {
 	limit, offset := helper.LimitOffsetConvert(page, limit)
 	dataResponse, err := userHandler.userService.GetAll(queryParams, limit, offset)
 	if err != nil {
-		if err.Error() == consts.DATABASE_InvaildQueryParameter {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.DATABASE_InvaildQueryParameter))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateUserFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
 	userEntities, exist := dataResponse["data"]
@@ -117,12 +101,8 @@ func (userHandler *UserHandler) GetUserData(c echo.Context) error {
 
 	userEntity, err := userHandler.userService.GetData(loggedInUserId, uint(userId), loggedInUserRole)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
-			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateUserFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessReadUserData, entityToResponse(userEntity)))
 }
@@ -147,16 +127,8 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 
 	userEntity, err = userHandler.userService.ModifyData(loggedInUserId, uint(userId), loggedInUserRole, userEntity)
 	if err != nil {
-		if err.Error() == consts.VALIDATION_InvalidInput {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
-		} else if err.Error() == consts.SERVER_ForbiddenRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
-			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
-		} else if err.Error() == consts.USER_EmailAlreadyUsed {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmailAlreadyUsed))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateUserFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
 	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessUpdateUserData, entityToResponse(userEntity)))
@@ -175,13 +147,9 @@ func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
 
 	err = userHandler.userService.Remove(loggedInUserId, uint(userId), loggedInUserRole)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
-			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
-		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
+		codeStatus, failedMessage := helper.ValidateUserFailedResponse(c, err)
+		return c.JSON(codeStatus, helper.FailedResponse(failedMessage))
 	}
 
-	return c.JSON(http.StatusNoContent, helper.SuccessResponse(consts.USER_SuccessDelete))
+	return c.JSON(http.StatusOK, helper.SuccessResponse(consts.USER_SuccessDelete))
 }

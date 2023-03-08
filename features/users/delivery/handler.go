@@ -142,10 +142,10 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 
 	userEntity, err = userHandler.userService.ModifyData(loggedInUserId, uint(userId), loggedInUserRole, userEntity)
 	if err != nil {
-		if err.Error() == consts.SERVER_ForbiddenRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err.Error() == consts.VALIDATION_InvalidInput{
+		if err.Error() == consts.VALIDATION_InvalidInput{
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
+		} else if err.Error() == consts.SERVER_ForbiddenRequest {
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
 			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
 		} else if err.Error() == consts.USER_EmailAlreadyUsed {
@@ -173,7 +173,7 @@ func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
 		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
-			return c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
+			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
 		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}

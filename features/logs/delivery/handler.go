@@ -69,5 +69,5 @@ func (logHandler *LogHandler) GetLogDataByMenteeId(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
 	}
 	dataResponse["data"] = listEntityToResponse(logEntities.([]logs.LogEntity))
-	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessReadUserData, dataResponse))
+	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.LOG_SuccessReadLogData, dataResponse))
 }

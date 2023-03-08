@@ -14,7 +14,7 @@ func TestLogin(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("Login", mock.Anything, mock.AnythingOfType("string")).Return(v.Output.Result, v.Output.Token, nil)
+			userDataMock.On("Login", mock.Anything, mock.AnythingOfType("string")).Return(v.Output.Result, v.Output.Token, v.Output.errResult)
 
 			//execute
 			userService := New(userDataMock)
@@ -34,7 +34,7 @@ func TestCreate(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("Insert", mock.Anything).Return(v.Output.Result, nil)
+			userDataMock.On("Insert", mock.Anything).Return(v.Output.Result, v.Output.errResult)
 
 			//execute
 			userService := New(userDataMock)
@@ -54,7 +54,7 @@ func TestGetAll(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("SelectAll", mock.Anything, mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, nil)
+			userDataMock.On("SelectAll", mock.Anything, mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, v.Output.errResult)
 
 			//execute
 			userService := New(userDataMock)
@@ -74,7 +74,7 @@ func TestGetData(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("SelectData", mock.Anything).Return(v.Output.Result, nil)
+			userDataMock.On("SelectData", mock.Anything).Return(v.Output.Result, v.Output.errResult)
 
 			//execute
 			userService := New(userDataMock)
@@ -94,7 +94,7 @@ func TestModifyData(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("UpdateData", mock.Anything).Return(v.Output.Result, nil)
+			userDataMock.On("UpdateData", mock.Anything).Return(v.Output.Result, v.Output.errResult)
 
 			//execute
 			userService := New(userDataMock)
@@ -114,7 +114,7 @@ func TestRemove(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("Delete", mock.AnythingOfType("uint")).Return(nil)
+			userDataMock.On("Delete", mock.AnythingOfType("uint")).Return(v.Output.errResult)
 
 			//execute
 			userService := New(userDataMock)

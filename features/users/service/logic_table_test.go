@@ -3,6 +3,7 @@ package service
 import (
 	"alta-dashboard-be/features/users"
 	"alta-dashboard-be/utils/consts"
+	"errors"
 )
 
 type TestTable struct {
@@ -19,9 +20,10 @@ type TestTable struct {
 		queryParams      map[string][]string
 	}
 	Output struct {
-		IsError bool
-		Token   string
-		Result  interface{}
+		IsError   bool
+		Token     string
+		Result    interface{}
+		errResult error
 	}
 }
 
@@ -44,13 +46,15 @@ func LoginTestTable() []TestTable {
 				Password: "qwerty",
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Token:   "",
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -69,13 +73,43 @@ func LoginTestTable() []TestTable {
 				Email: "Joko@gmail.com",
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Token:   "",
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
+			},
+		},
+		{
+			Name: tname + " expect failed",
+			Input: struct {
+				userId           uint
+				Email            string
+				Password         string
+				loggedInUserId   uint
+				loggedInUserRole string
+				userInput        users.UserEntity
+				limit            int
+				offset           int
+				queryParams      map[string][]string
+			}{
+				Email:    "joko@gmail.com",
+				Password: "qwerty",
+			},
+			Output: struct {
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
+			}{
+				IsError: true,
+				Token:   "Token",
+				Result: users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -95,9 +129,10 @@ func LoginTestTable() []TestTable {
 				Password: "qwerty",
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
 				Token:   "Token",
@@ -109,6 +144,7 @@ func LoginTestTable() []TestTable {
 					Role:     consts.E_USER_Admin,
 					Status:   consts.E_USER_Active,
 				},
+				errResult: nil,
 			},
 		},
 	}
@@ -133,12 +169,14 @@ func CreateTestTable() []TestTable {
 				loggedInUserRole: consts.E_USER_User,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -161,12 +199,14 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -189,12 +229,14 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -217,12 +259,45 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
+			},
+		},
+		{
+			Name: tname + " expect failed",
+			Input: struct {
+				userId           uint
+				Email            string
+				Password         string
+				loggedInUserId   uint
+				loggedInUserRole string
+				userInput        users.UserEntity
+				limit            int
+				offset           int
+				queryParams      map[string][]string
+			}{
+				loggedInUserRole: consts.E_USER_Admin,
+				userInput: users.UserEntity{
+					FullName: "Joko",
+					Email:    "joko@gmail.com",
+					Password: "qwerty",
+				},
+			},
+			Output: struct {
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
+			}{
+				IsError: true,
+				Result: users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -246,9 +321,10 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
 				Result: users.UserEntity{
@@ -260,6 +336,7 @@ func CreateTestTable() []TestTable {
 					Role:     consts.E_USER_User,
 					Status:   consts.E_USER_Active,
 				},
+				errResult: nil,
 			},
 		},
 	}
@@ -286,42 +363,14 @@ func ModifyDataTestTable() []TestTable {
 				loggedInUserRole: consts.E_USER_User,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
-			},
-		},
-		{
-			Name: tname + " blank password",
-			Input: struct {
-				userId           uint
-				Email            string
-				Password         string
-				loggedInUserId   uint
-				loggedInUserRole string
-				userInput        users.UserEntity
-				limit            int
-				offset           int
-				queryParams      map[string][]string
-			}{
-				userId:           2,
-				loggedInUserId:   1,
-				loggedInUserRole: consts.E_USER_Admin,
-				userInput: users.UserEntity{
-					FullName: "Joko",
-					Email:    "Joko@gmail.com",
-				},
-			},
-			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
-			}{
-				IsError: false,
-				Result:  users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -346,12 +395,14 @@ func ModifyDataTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -376,12 +427,50 @@ func ModifyDataTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
+				errResult: errors.New(""),
+			},
+		},
+		{
+			Name: tname + " expect failed",
+			Input: struct {
+				userId           uint
+				Email            string
+				Password         string
+				loggedInUserId   uint
+				loggedInUserRole string
+				userInput        users.UserEntity
+				limit            int
+				offset           int
+				queryParams      map[string][]string
+			}{
+				userId:           1,
+				loggedInUserId:   1,
+				loggedInUserRole: consts.E_USER_User,
+				userInput: users.UserEntity{
+					FullName: "Joko",
+					Email:    "joko@gmail.com",
+					Password: "qwerty",
+					Team:     consts.E_USER_Mentor,
+					Role:     consts.E_USER_User,
+					Status:   consts.E_USER_Active,
+				},
+			},
+			Output: struct {
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
+			}{
+				IsError: true,
+				Result: users.UserEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -410,20 +499,14 @@ func ModifyDataTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
-				Result: users.UserEntity{
-					Id:       1,
-					FullName: "Joko",
-					Email:    "joko@gmail.com",
-					Password: "qwerty",
-					Team:     consts.E_USER_Mentor,
-					Role:     consts.E_USER_User,
-					Status:   consts.E_USER_Active,
-				},
+				Result: users.UserEntity{},
+				errResult: nil,
 			},
 		},
 		{
@@ -452,9 +535,10 @@ func ModifyDataTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
 				Result: users.UserEntity{
@@ -466,6 +550,7 @@ func ModifyDataTestTable() []TestTable {
 					Role:     consts.E_USER_User,
 					Status:   consts.E_USER_Active,
 				},
+				errResult: nil,
 			},
 		},
 	}
@@ -474,6 +559,36 @@ func ModifyDataTestTable() []TestTable {
 func GetAllTestTable() []TestTable {
 	tname := "test get all user data"
 	return []TestTable{
+		{
+			Name: tname + " expect failed",
+			Input: struct {
+				userId           uint
+				Email            string
+				Password         string
+				loggedInUserId   uint
+				loggedInUserRole string
+				userInput        users.UserEntity
+				limit            int
+				offset           int
+				queryParams      map[string][]string
+			}{
+				limit:  2,
+				offset: 2,
+				queryParams: map[string][]string{
+					"role": []string{"Admin"},
+				},
+			},
+			Output: struct {
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
+			}{
+				IsError: true,
+				Result: map[string]any{},
+				errResult: errors.New(""),
+			},
+		},
 		{
 			Name: tname + " expect success",
 			Input: struct {
@@ -494,9 +609,10 @@ func GetAllTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
 				Result: map[string]any{
@@ -514,6 +630,7 @@ func GetAllTestTable() []TestTable {
 						},
 					},
 				},
+				errResult: nil,
 			},
 		},
 	}
@@ -540,16 +657,17 @@ func GetDataTestTable() []TestTable {
 				userId:           2,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
 				Result:  users.UserEntity{},
 			},
 		},
 		{
-			Name: tname + " expect succes (user get self data)",
+			Name: tname + " expect failed",
 			Input: struct {
 				userId           uint
 				Email            string
@@ -566,12 +684,49 @@ func GetDataTestTable() []TestTable {
 				userId:           1,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
+			}{
+				IsError: true,
+				Result:  users.UserEntity{},
+				errResult: errors.New(""),
+			},
+		},
+		{
+			Name: tname + " expect success (user get self data)",
+			Input: struct {
+				userId           uint
+				Email            string
+				Password         string
+				loggedInUserId   uint
+				loggedInUserRole string
+				userInput        users.UserEntity
+				limit            int
+				offset           int
+				queryParams      map[string][]string
+			}{
+				loggedInUserRole: consts.E_USER_User,
+				loggedInUserId:   1,
+				userId:           1,
+			},
+			Output: struct {
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
-				Result:  users.UserEntity{},
+				Result:  users.UserEntity{
+					Id: 1,
+					FullName: "Joko",
+					Email: "Joko@gmail.com",
+					Team: consts.E_USER_Mentor,
+					Role: consts.E_USER_User,
+					Status: consts.E_USER_Active,
+				},
+				errResult: nil,
 			},
 		},
 		{
@@ -592,12 +747,21 @@ func GetDataTestTable() []TestTable {
 				userId:           2,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
-				Result:  users.UserEntity{},
+				Result:  users.UserEntity{
+					Id: 2,
+					FullName: "Joko",
+					Email: "Joko@gmail.com",
+					Team: consts.E_USER_Mentor,
+					Role: consts.E_USER_User,
+					Status: consts.E_USER_Active,
+				},
+				errResult: nil,
 			},
 		},
 		{
@@ -618,12 +782,21 @@ func GetDataTestTable() []TestTable {
 				userId:           1,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
-				Result:  users.UserEntity{},
+				Result:  users.UserEntity{
+					Id: 1,
+					FullName: "Joko",
+					Email: "Joko@gmail.com",
+					Team: consts.E_USER_Mentor,
+					Role: consts.E_USER_Admin,
+					Status: consts.E_USER_Active,
+				},
+				errResult: nil,
 			},
 		},
 	}
@@ -650,15 +823,17 @@ func RemoveTestTable() []TestTable {
 				userId:           2,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: true,
+				errResult: errors.New(""),
 			},
 		},
 		{
-			Name: tname + " expect succes (user get self data)",
+			Name: tname + " expect failed",
 			Input: struct {
 				userId           uint
 				Email            string
@@ -675,11 +850,40 @@ func RemoveTestTable() []TestTable {
 				userId:           1,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
+			}{
+				IsError: true,
+				errResult: errors.New(""),
+			},
+		},
+		{
+			Name: tname + " expect success (user get self data)",
+			Input: struct {
+				userId           uint
+				Email            string
+				Password         string
+				loggedInUserId   uint
+				loggedInUserRole string
+				userInput        users.UserEntity
+				limit            int
+				offset           int
+				queryParams      map[string][]string
+			}{
+				loggedInUserRole: consts.E_USER_User,
+				loggedInUserId:   1,
+				userId:           1,
+			},
+			Output: struct {
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
+				errResult: nil,
 			},
 		},
 		{
@@ -700,9 +904,10 @@ func RemoveTestTable() []TestTable {
 				userId:           2,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
 			},
@@ -725,11 +930,13 @@ func RemoveTestTable() []TestTable {
 				userId:           1,
 			},
 			Output: struct {
-				IsError bool
-				Token   string
-				Result  interface{}
+				IsError   bool
+				Token     string
+				Result    interface{}
+				errResult error
 			}{
 				IsError: false,
+				errResult: nil,
 			},
 		},
 	}

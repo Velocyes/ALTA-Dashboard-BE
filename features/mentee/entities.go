@@ -24,35 +24,35 @@ type MenteeCore struct {
 }
 
 type MenteeRequest struct {
-	FullName          string
-	Email             string
-	Address           string
-	Phone             string
-	Telegram          string
-	EmergencyName     string
-	EmergencyPhone    string
-	EmergencyStatus   string
-	EducationType     string
-	EducationMajor    string
-	EducationGradDate string
-	ClassID           int
+	FullName          string `json:"full_name"`
+	Email             string `json:"email"`
+	Address           string `json:"address"`
+	Phone             string `json:"phone"`
+	Telegram          string `json:"telegram"`
+	EmergencyName     string `json:"emergency_name"`
+	EmergencyPhone    string `json:"emergency_phone"`
+	EmergencyStatus   string `json:"emergency_status"`
+	EducationType     string `json:"education_type"`
+	EducationMajor    string `json:"education_major"`
+	EducationGradDate string `json:"education_grad_date"`
+	ClassID           int    `json:"class_id"`
 }
 
 type MenteeResponse struct {
-	ID                int
-	CreatedAt         time.Time
-	FullName          string
-	Email             string
-	Address           string
-	Phone             string
-	Telegram          string
-	EmergencyName     string
-	EmergencyPhone    string
-	EmergencyStatus   string
-	EducationType     string
-	EducationMajor    string
-	EducationGradDate string
-	ClassID           int
+	ID                int    `json:"id"`
+	CreatedAt         string `json:"created_at"`
+	FullName          string `json:"full_name"`
+	Email             string `json:"email"`
+	Address           string `json:"address"`
+	Phone             string `json:"phone"`
+	Telegram          string `json:"telegram"`
+	EmergencyName     string `json:"emergency_name"`
+	EmergencyPhone    string `json:"emergency_phone"`
+	EmergencyStatus   string `json:"emergency_status"`
+	EducationType     string `json:"education_type"`
+	EducationMajor    string `json:"education_major"`
+	EducationGradDate string `json:"education_grad_date"`
+	ClassID           int    `json:"class_id"`
 }
 
 //go:generate mockery --name MenteeData_ --output ../../mocks

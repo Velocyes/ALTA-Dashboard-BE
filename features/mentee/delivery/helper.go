@@ -20,7 +20,7 @@ func convertToCore(u *mentee.MenteeRequest) (mentee.MenteeCore, error) {
 		EducationMajor:  u.EducationMajor,
 	}
 	if u.EducationGradDate != "" {
-		education, err := time.Parse("", u.EducationGradDate)
+		education, err := time.Parse("2006-01-02", u.EducationGradDate)
 		if err != nil {
 			return mentee.MenteeCore{}, errors.New("invalid time format education_graduation_date")
 		}
@@ -30,19 +30,26 @@ func convertToCore(u *mentee.MenteeRequest) (mentee.MenteeCore, error) {
 }
 
 func convertToResponse(u *mentee.MenteeCore) mentee.MenteeResponse {
-	return mentee.MenteeResponse{
-		FullName:          u.FullName,
-		Email:             u.Email,
-		Address:           u.Address,
-		Phone:             u.Phone,
-		Telegram:          u.Telegram,
-		EmergencyName:     u.EmergencyName,
-		EmergencyPhone:    u.EmergencyPhone,
-		EmergencyStatus:   u.EmergencyStatus,
-		EducationType:     u.EducationType,
-		EducationMajor:    u.EducationMajor,
-		EducationGradDate: u.EducationGradDate.Format("2006-01-02"),
+	data := mentee.MenteeResponse{
+		ID:              u.ID,
+		CreatedAt:       u.CreatedAt.Format("2006-01-02"),
+		FullName:        u.FullName,
+		Email:           u.Email,
+		Address:         u.Address,
+		Phone:           u.Phone,
+		Telegram:        u.Telegram,
+		EmergencyName:   u.EmergencyName,
+		EmergencyPhone:  u.EmergencyPhone,
+		EmergencyStatus: u.EmergencyStatus,
+		EducationType:   u.EducationType,
+		EducationMajor:  u.EducationMajor,
 	}
+
+	if u.EducationGradDate != nil {
+		data.EducationGradDate = u.EducationGradDate.Format("2006-01-02")
+	}
+
+	return data
 }
 
 func convertToResponseList(u []mentee.MenteeCore) []mentee.MenteeResponse {

@@ -15,8 +15,8 @@ type Mentee struct {
 	Address   string    `gorm:"type:text;not null"`
 	Phone     string    `gorm:"type:varchar(15);not null"`
 	Telegram  string    `gorm:"type:varchar(25);not null"`
-	Emergency Emergency `gorm:"foreignKey:ID;references:MenteeID"`
-	Education Education `gorm:"foreignKey:ID;references:MenteeID"`
+	Emergency Emergency `gorm:"foreignKey:MenteeID;references:ID"`
+	Education Education `gorm:"foreignKey:MenteeID;references:ID"`
 	ClassID   int       `gorm:"not null;foreignKey"`
 	Class     cm.Class  `gorm:"foreignKey:ClassID;references:ID"`
 	Logs      []lm.Log

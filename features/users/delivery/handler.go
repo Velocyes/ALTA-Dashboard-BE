@@ -69,7 +69,7 @@ func (userHandler *UserHandler) Register(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
-		} else if err.Error() == consts.VALIDATION_InvalidInput{
+		} else if err.Error() == consts.VALIDATION_InvalidInput {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
 		} else if err.Error() == consts.USER_EmailAlreadyUsed {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmailAlreadyUsed))
@@ -86,8 +86,13 @@ func (userHandler *UserHandler) GetAllUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
 
-	dataResponse, err := userHandler.userService.GetAll(helper.LimitOffsetConvert(page, limit))
+	queryParams := c.QueryParams()
+	limit, offset := helper.LimitOffsetConvert(page, limit)
+	dataResponse, err := userHandler.userService.GetAll(queryParams, limit, offset)
 	if err != nil {
+		if err.Error() == consts.DATABASE_InvaildQueryRequest {
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.DATABASE_InvaildQueryRequest))
+		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 
@@ -142,7 +147,7 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 
 	userEntity, err = userHandler.userService.ModifyData(loggedInUserId, uint(userId), loggedInUserRole, userEntity)
 	if err != nil {
-		if err.Error() == consts.VALIDATION_InvalidInput{
+		if err.Error() == consts.VALIDATION_InvalidInput {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
 		} else if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))

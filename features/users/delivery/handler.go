@@ -90,8 +90,8 @@ func (userHandler *UserHandler) GetAllUser(c echo.Context) error {
 	limit, offset := helper.LimitOffsetConvert(page, limit)
 	dataResponse, err := userHandler.userService.GetAll(queryParams, limit, offset)
 	if err != nil {
-		if err.Error() == consts.DATABASE_InvaildQueryRequest {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.DATABASE_InvaildQueryRequest))
+		if err.Error() == consts.DATABASE_InvaildQueryParameter {
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.DATABASE_InvaildQueryParameter))
 		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}

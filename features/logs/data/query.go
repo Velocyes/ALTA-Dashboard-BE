@@ -5,6 +5,7 @@ import (
 	_logModel "alta-dashboard-be/features/logs/models"
 	"alta-dashboard-be/utils/consts"
 	"errors"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -23,6 +24,9 @@ func (logQuery *logQuery) Insert(input logs.LogEntity) (logs.LogEntity, error) {
 	logGorm := EntityToGorm(input)
 	txInsert := logQuery.db.Create(&logGorm)
 	if txInsert.Error != nil || txInsert.RowsAffected == 0{
+		if strings.Contains(txInsert.Error.Error(), "Error 1452 (23000)") {
+			return logs.LogEntity{}, errors.New(consts.LOG_MenteeNotExisted)
+		}
 		return logs.LogEntity{}, errors.New(consts.SERVER_InternalServerError)
 	}
 

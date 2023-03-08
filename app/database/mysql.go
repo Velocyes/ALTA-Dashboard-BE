@@ -39,6 +39,6 @@ func initSuperAdmin(db *gorm.DB) {
 }
 
 func InitialMigration(db *gorm.DB) {
-	db.AutoMigrate(&_userModel.User{}, _classModel.Class{}, _menteeModel.Emergency{}, _menteeModel.Education{}, &_menteeModel.Mentee{}, &_logModel.Log{})
+	db.AutoMigrate(&_userModel.User{}, &_classModel.Class{}, &_menteeModel.Mentee{}, &_menteeModel.Emergency{}, &_menteeModel.Education{}, &_logModel.Log{})
 	initSuperAdmin(db)
 }

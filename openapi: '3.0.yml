@@ -1,574 +1,119 @@
-openapi: '3.0.2'
-info:
-  title: Immersive Dashboard App API
-  version: '1.0'
+openapi: 3.0.0
 servers:
-  - url: http://104.198.56.90
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/HDKEF11/project2/1.0.0
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Simple Inventory API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
 paths:
-  /users:
+  /inventory:
     get:
       tags:
-        - Users
-      summary: get all users
-      description: Get all users data
+        - developers
+      summary: searches inventory
+      operationId: searchInventory
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
       parameters:
-        - name: "page"
-          in: query
+        - in: query
+          name: searchString
+          description: pass an optional search string for looking up inventory
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: skip
+          description: number of records to skip for pagination
           schema:
             type: integer
-            example: 1
-        - name: limit
-          description: "Limit data per page"
-          in: query
+            format: int32
+            minimum: 0
+        - in: query
+          name: limit
+          description: maximum number of records to return
           schema:
             type: integer
-            example: 2
+            format: int32
+            minimum: 0
+            maximum: 50
       responses:
         '200':
-          description: Succress reponse with return of list of user datas
+          description: search results matching criteria
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "succesfully read user data"
-                  data:
-                    total_page: 2
-                    page: 1
-                    data:
-                      - id: 1
-                        name: "Admin"
-                        email: "Admin@gmail.com"
-                        team: "Mentor"
-                        role: "Admin"
-                        status: "Active"
-                      - id: 2
-                        name: "User"
-                        email: "User@gmail.com"
-                        team: "Mentor"
-                        role: "User"
-                        status: "Active"
-        '500':
-          $ref: '#/components/responses/500'
-
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
+        '400':
+          description: bad input parameter
     post:
       tags:
-        - Users
-      security:
-        - JWTAuth: []
-      summary: add user
-      description: Register user
-      parameters:
-        - name: "full_name"
-          description: "User's full name"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko"
-        - name: email
-          description: "User's email"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko@gmail.com"
-        - name: password
-          description: "User's account password"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "qwerty"
-        - name: team
-          description: "User's account in Alterra"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Mentor"
-        - name: role
-          description: "User's account role"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "User"
-        - name: status
-          description: "User's account status"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Active"
-      requestBody:
-        required: true
-        content:
-          application/form-data:
-            schema:
-              type: object
-              example:
-                name: "Joko"
-                email: "Joko@gmail.com"
-                password: "qwerty"
-
+        - admins
+      summary: adds an inventory item
+      operationId: addInventory
+      description: Adds an item to the system
       responses:
         '201':
-          description: Success response with return of inserted data
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "succesfully insert user data"
-                  data: 
-                    - id: 1
-                      name: "Joko"
-                      email: "Joko@gmail.com"
-                      team: "Mentor"
-                      role: "User"
-                      status: "Active"
-                  
+          description: item created
         '400':
-          $ref: '#/components/responses/400'
-          
-        '500':
-          $ref: '#/components/responses/500'
-
-  /users/login:
-    post:
-      tags:
-        - Users
-      summary: login
-      description: Login with email and password
-      parameters:
-        - name: email
-          description: "User's email"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko@gmail.com"
-        - name: password
-          description: "User's account password"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "qwerty"
-        
+          description: 'invalid input, object invalid'
+        '409':
+          description: an existing item already exists
       requestBody:
-        required: true
         content:
-          application/form-data:
+          application/json:
             schema:
-              type: object
-              example:
-                email: "Joko@gmail.com"
-                password: "qwerty"
-
-      responses:
-        '200':
-          description: Success response with return of user data and generated token
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "login succeed"
-                  data:
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzgwNjU5NDAsInJvbGUiOiJVc2VyIiwidXNlcklkIjoxfQ.MKTdYMbY6awM0s8_A3fauSV2RjuTBaohfTslkZ0UkWk"
-                    data:
-                      - id: 1
-                        name: "Joko"
-                        email: "Joko@gmail.com"
-                        team: "Admission"
-                        role: "Admin"
-                        status: "Active"
-
-        '400':
-          $ref: '#/components/responses/400'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-        '500':
-          $ref: '#/components/responses/500'
-
-  /users/{user_id}:
-    get:
-      tags:
-        - Users
-      summary: get user
-      description: Get user's data by id
-      security:
-        - JWTAuth: []
-      parameters:
-        - name: user_id
-          description: "User's id of the user you want to search for"
-          required: true
-          in: path
-          schema:
-            type: integer
-            example: 1
-
-      responses:
-        '200':
-          description: Success response with return of an user data
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "succesfully read user data"
-                  data:
-                    - id: 1
-                      name: "Joko"
-                      email: "Joko@gmail.com"
-                      team: "Mentor"
-                      role: "User"
-                      status: "Active"
-
-        '400':
-          $ref: '#/components/responses/400'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-    put:
-      tags:
-        - Users
-      summary: update user by id
-      description: Update user's data by id
-      security:
-        - JWTAuth: []
-      parameters:
-        - name: user_id
-          description: "User's id of the user you want to search for"
-          required: true
-          in: path
-          schema:
-            type: integer
-            example: 1
-        - name: "full_name"
-          description: "User's full name"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko"
-        - name: email
-          description: "User's email"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Joko@gmail.com"
-        - name: password
-          description: "User's account password"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "qwerty"
-        - name: team
-          description: "User's account in Alterra"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Mentor"
-        - name: role
-          description: "User's account role"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "User"
-        - name: status
-          description: "User's account status"
-          required: false
-          in: query
-          schema:
-            type: string
-            example: "Active"
-      requestBody:
-        required: true
-        content:
-          application/form-data:
-            schema:
-              type: object
-              example:
-                name: "Joko"
-                email: "Joko@gmail.com"
-                team: "Admission"
-                role: "Admin"
-                status: "Active"
-
-      responses:
-        '204':
-          description: Success response with return of updated data
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "succesfully update user data"
-                  data:
-                  - id: 1
-                    name: "Joko"
-                    email: "Joko@gmail.com"
-                    team: "Admission"
-                    role: "Admin"
-                    status: "Active"
-
-        '400':
-          $ref: '#/components/responses/400'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-        '500':
-          $ref: '#/components/responses/500'
-
-    delete:
-      tags:
-        - Users
-      summary: delete user
-      description: Delete user by id
-      security:
-        - JWTAuth: []
-      parameters:
-        - name: user_id
-          description: "User's id of the user you want to delete for"
-          required: true
-          in: path
-          schema:
-            type: integer
-            example: 1
-
-      responses:
-        '200':
-          description: Success response for deleting user
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "succesfully delete user"
-
-        '400':
-          $ref: '#/components/responses/400'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-        '500':
-          $ref: '#/components/responses/500'
-
-  /logs:
-    post:
-      tags:
-        - Logs
-      summary: add logs
-      description: Create new logs
-      security:
-        - JWTAuth: []
-      parameters:
-        - name: title
-          description: "Log's title"
-          required: true
-          in: query
-          schema:
-            type: integer
-            example: "Lorem Ipsum"
-        - name: status
-          description: "Mentee's status change logs"
-          required: true
-          in: query
-          schema:
-            type: integer
-            example: "Join Class"
-        - name: feedback
-          description: "Mentee's feedback logs"
-          required: true
-          in: query
-          schema:
-            type: string
-            example: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-        - name: mentee_id
-          description: "Mentee's id you want to assigned for"
-          required: true
-          in: query
-          schema:
-            type: integer
-            example: 1
-            
-      requestBody:
-        required: true
-        content:
-          application/form-data:
-            schema:
-              type: object
-              example:
-                title: "Lorem Ipsum"
-                status: "Join Class"
-                feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                mentee_id: 1
-
-      responses:
-        '204':
-          description: Success response with return of inserted data
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: "success"
-                  message: "succesfully insert log data"
-                  data:
-                  - id: 1
-                    title: "Lorem Ipsum"
-                    status: "Join Class"
-                    feedback: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                    user_id: 1
-                    mentee_id: 1
-
-        '500':
-          $ref: '#/components/responses/500'
-
-####################################
-#  COMPONENTS
-####################################
+              $ref: '#/components/schemas/InventoryItem'
+        description: Inventory item to add
 components:
-  securitySchemes:
-      JWTAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-        description: "JWT Token"
-
   schemas:
-    User:
+    InventoryItem:
       type: object
+      required:
+        - id
+        - name
+        - manufacturer
+        - releaseDate
       properties:
         id:
-          type: integer
-          format: uint
-        full_name:
           type: string
-        email:
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
           type: string
-        password:
-          type: string
-        team:
-          type: string
-          enum:
-            - Mentor
-            - Placement
-            - People
-            - Admission
-            - Academic
-        role:
-          type: string
-          enum:
-            - User
-            - Admin
-        status:
-          type: string
-          enum:
-            - 'Active'
-            - 'Not-Active'
-            - 'Deleted'
-        created_at:
+          example: Widget Adapter
+        releaseDate:
           type: string
           format: date-time
-        updated_at:
-          type: string
-          format: date-time
-
-    Log:
-      type: object
+          example: '2016-08-29T09:12:33.001Z'
+        manufacturer:
+          $ref: '#/components/schemas/Manufacturer'
+    Manufacturer:
+      required:
+        - name
       properties:
-        id:
-          type: integer
-          format: uint
-        title:
+        name:
           type: string
-        status:
+          example: ACME Corporation
+        homePage:
           type: string
-          enum:
-            - None
-            - Join Class
-            - Continue Section 2
-            - Continue Section 3
-        feedback:
+          format: url
+          example: 'https://www.acme-corp.com'
+        phone:
           type: string
-        user_id:
-          type: integer
-        mentee_id:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-
-    ResponseWithData:
+          example: 408-867-5309
       type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        data:
-          type: array
-          
-    ResponseWithoutData:
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-          
-  responses:
-    '400':
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            $ref: '#/components/schemas/ResponseWithoutData'
-          example:
-            status: "failed"
-            message: "{{any message}}"
-
-    '404':
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            $ref: '#/components/schemas/ResponseWithoutData'
-          example:
-            status: "success"
-            message: "{{any message}}"
-
-    '500':
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            $ref: '#/components/schemas/ResponseWithoutData'
-          example:
-            status: "failed"
-            message: "{{any message}}"

@@ -3,6 +3,7 @@ package service
 import (
 	"alta-dashboard-be/features/logs"
 	"alta-dashboard-be/utils/consts"
+	"errors"
 )
 
 type TestTable struct {
@@ -15,8 +16,9 @@ type TestTable struct {
 		logEntity        logs.LogEntity
 	}
 	Output struct {
-		IsError bool
-		Result  interface{}
+		IsError   bool
+		Result    interface{}
+		errResult error
 	}
 }
 
@@ -36,11 +38,13 @@ func CreateTestTable() []TestTable {
 				logEntity:      logs.LogEntity{},
 			},
 			Output: struct {
-				IsError bool
-				Result  interface{}
+				IsError   bool
+				Result    interface{}
+				errResult error
 			}{
-				IsError: true,
-				Result:  logs.LogEntity{},
+				IsError:   true,
+				Result:    logs.LogEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -61,11 +65,13 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Result  interface{}
+				IsError   bool
+				Result    interface{}
+				errResult error
 			}{
-				IsError: true,
-				Result:  logs.LogEntity{},
+				IsError:   true,
+				Result:    logs.LogEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -86,11 +92,13 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Result  interface{}
+				IsError   bool
+				Result    interface{}
+				errResult error
 			}{
-				IsError: true,
-				Result:  logs.LogEntity{},
+				IsError:   true,
+				Result:    logs.LogEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -111,11 +119,13 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
-				IsError bool
-				Result  interface{}
+				IsError   bool
+				Result    interface{}
+				errResult error
 			}{
-				IsError: true,
-				Result:  logs.LogEntity{},
+				IsError:   true,
+				Result:    logs.LogEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -136,11 +146,41 @@ func CreateTestTable() []TestTable {
 				},
 			},
 			Output: struct {
+				IsError   bool
+				Result    interface{}
+				errResult error
+			}{
+				IsError:   true,
+				Result:    logs.LogEntity{},
+				errResult: errors.New(""),
+			},
+		},
+		{
+			Name: tname + " expect failed",
+			Input: struct {
+				LoggedInUserId   uint
+				SearchedMenteeId uint
+				Limit            int
+				Offset           int
+				logEntity        logs.LogEntity
+			}{
+				LoggedInUserId: 1,
+				logEntity: logs.LogEntity{
+					Title:    "Lorem Ipsum",
+					Status:   consts.E_Log_None,
+					Feedback: "Lorem Ipsum",
+					UserID:   1,
+					MenteeID: 1,
+				},
+			},
+			Output: struct {
 				IsError bool
 				Result  interface{}
+				errResult error
 			}{
 				IsError: false,
-				Result:  logs.LogEntity{},
+				Result: logs.LogEntity{},
+				errResult: errors.New(""),
 			},
 		},
 		{
@@ -164,6 +204,7 @@ func CreateTestTable() []TestTable {
 			Output: struct {
 				IsError bool
 				Result  interface{}
+				errResult error
 			}{
 				IsError: false,
 				Result: logs.LogEntity{
@@ -173,6 +214,7 @@ func CreateTestTable() []TestTable {
 					UserID:   1,
 					MenteeID: 1,
 				},
+				errResult: nil,
 			},
 		},
 	}
@@ -181,6 +223,29 @@ func CreateTestTable() []TestTable {
 func GetDataTestTable() []TestTable {
 	tname := "test get log"
 	return []TestTable{
+		{
+			Name: tname + " expect failed",
+			Input: struct {
+				LoggedInUserId   uint
+				SearchedMenteeId uint
+				Limit            int
+				Offset           int
+				logEntity        logs.LogEntity
+			}{
+				SearchedMenteeId: 1,
+				Limit:            1,
+				Offset:           1,
+			},
+			Output: struct {
+				IsError bool
+				Result  interface{}
+				errResult error
+			}{
+				IsError: true,
+				Result:  map[string]any{},
+				errResult: errors.New(""),
+			},
+		},
 		{
 			Name: tname + " expect success",
 			Input: struct {
@@ -191,15 +256,17 @@ func GetDataTestTable() []TestTable {
 				logEntity        logs.LogEntity
 			}{
 				SearchedMenteeId: 1,
-				Limit: 1,
-				Offset: 1,
+				Limit:            1,
+				Offset:           1,
 			},
 			Output: struct {
 				IsError bool
 				Result  interface{}
+				errResult error
 			}{
 				IsError: false,
 				Result:  map[string]any{},
+				errResult: nil,
 			},
 		},
 	}

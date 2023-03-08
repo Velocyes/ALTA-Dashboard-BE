@@ -71,7 +71,7 @@ func (userQuery *userQuery) SelectAll(queryParams map[string]any, limit, offset 
 	txSelect := userQuery.db.Where(queryParams).Limit(limit).Offset(offset).Find(&usersGorm)
 	if txSelect.Error != nil || txCount.Error != nil {
 		if strings.Contains(txSelect.Error.Error(), "Error 1054 (42S22)") {
-			return nil, errors.New(consts.DATABASE_InvaildQueryRequest)
+			return nil, errors.New(consts.DATABASE_InvaildQueryParameter)
 		}
 		return nil, errors.New(consts.SERVER_InternalServerError)
 	}

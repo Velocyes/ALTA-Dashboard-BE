@@ -26,8 +26,8 @@ func (u *MenteeData) Create(mentee mentee.MenteeCore) error {
 	m, emergency, edu := convertToModels(&mentee)
 
 	//insert to mentee
-	tx = tx.Create(&m)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	txC := tx.Create(&m)
+	if txC.Error != nil || txC.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("internal database create mentee error")
 	}
@@ -41,21 +41,21 @@ func (u *MenteeData) Create(mentee mentee.MenteeCore) error {
 	edu.MenteeID = int(m.ID)
 
 	//insert to emergency
-	tx = tx.Create(&emergency)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	txC = tx.Create(&emergency)
+	if txC.Error != nil || txC.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("internal database create emergency error")
 	}
 
 	//insert to education
-	tx = tx.Create(&edu)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	txC = tx.Create(&edu)
+	if txC.Error != nil || txC.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("internal database create education error")
 	}
 
-	tx = tx.Commit()
-	if tx.Error != nil {
+	txC = tx.Commit()
+	if txC.Error != nil {
 		tx.Rollback()
 		return errors.New("internal database commit error")
 	}
@@ -107,8 +107,8 @@ func (u *MenteeData) Update(id int, mentee mentee.MenteeCore) error {
 	m, emergency, edu := convertToModels(&mentee)
 
 	//update to mentee
-	tx = tx.Where("id = ?", id).Updates(&m)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	txU := tx.Where("id = ?", id).Updates(&m)
+	if txU.Error != nil || txU.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("internal database create mentee error")
 	}
@@ -122,21 +122,21 @@ func (u *MenteeData) Update(id int, mentee mentee.MenteeCore) error {
 	edu.MenteeID = int(m.ID)
 
 	//update to emergency
-	tx = tx.Where("mentee_id = ?", emergency.MenteeID).Updates(&emergency)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	txU = tx.Where("mentee_id = ?", emergency.MenteeID).Updates(&emergency)
+	if txU.Error != nil || txU.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("internal database create emergency error")
 	}
 
 	//update to education
-	tx = tx.Where("mentee_id = ?", edu.MenteeID).Updates(&edu)
-	if tx.Error != nil || tx.RowsAffected == 0 {
+	txU = tx.Where("mentee_id = ?", edu.MenteeID).Updates(&edu)
+	if txU.Error != nil || txU.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New("internal database create education error")
 	}
 
-	tx = tx.Commit()
-	if tx.Error != nil {
+	txU = tx.Commit()
+	if txU.Error != nil {
 		tx.Rollback()
 		return errors.New("internal database commit error")
 	}

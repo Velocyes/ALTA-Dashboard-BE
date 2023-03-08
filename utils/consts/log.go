@@ -13,39 +13,12 @@ const (
 	LOG_ErrorBindLogData string = "error bind log data"
 )
 
-// Response Error
-const (
-// Login
-// USER_UserNotFound string = "user not found"
-// USER_WrongPassword string = "wrong password"
-
-// Register
-// USER_EmailAlreadyUsed string = "email is already used"
-
-// Select
-// USER_FailedSelect string = "failed select user data"
-
-// Update
-// USER_FailedUpdate string = "failed update user data"
-
-// Delete
-// USER_FailedDelete string = "failed delete user data"
-)
-
 // Response Success
 const (
-	// Login
-	// USER_LoginSuccess string = "login succeed"
 
-	// Register
+	// Insert
 	LOG_SuccessAddLogData string = "succesfully insert log data"
 
 	// Select
-	// USER_SuccessReadUserData string = "succesfully read user data"
-
-	// Update
-	// USER_SuccessUpdateUserData string = "succesfully update user data"
-
-	// Delete
-	// USER_SuccessDelete string = "succesfully delete user"
+	LOG_SuccessReadLogData string = "succesfully read log data"
 )

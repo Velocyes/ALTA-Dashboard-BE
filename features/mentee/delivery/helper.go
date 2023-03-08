@@ -18,6 +18,7 @@ func convertToCore(u *mentee.MenteeRequest) (mentee.MenteeCore, error) {
 		EmergencyStatus: u.EmergencyStatus,
 		EducationType:   u.EducationType,
 		EducationMajor:  u.EducationMajor,
+		ClassID:         u.ClassID,
 	}
 	if u.EducationGradDate != "" {
 		education, err := time.Parse("2006-01-02", u.EducationGradDate)

@@ -1,6 +1,7 @@
 package users
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -54,7 +55,7 @@ type UserResponse struct {
 type UserServiceInterface_ interface {
 	Login(email string, password string) (UserEntity, string, error)
 	Create(input UserEntity, loggedInUserRole string) (UserEntity, error)
-	GetAll(limit, offset int) (map[string]any, error)
+	GetAll(queryParams url.Values, limit, offset int) (map[string]any, error)
 	GetData(loggedInUserId, userId uint, loggedInUserRole string) (UserEntity, error)
 	ModifyData(loggedInUserId, userId uint, loggedInUserRole string, input UserEntity) (UserEntity, error)
 	Remove(loggedInUserId, userId uint, loggedInUserRole string) error
@@ -64,7 +65,7 @@ type UserServiceInterface_ interface {
 type UserDataInterface_ interface {
 	Login(email string, password string) (UserEntity, string, error)
 	Insert(input UserEntity) (UserEntity, error)
-	SelectAll(limit, offset int) (map[string]any, error)
+	SelectAll(queryParams map[string]interface{}, limit, offset int) (map[string]any, error)
 	SelectData(userId uint) (UserEntity, error)
 	UpdateData(input UserEntity) (UserEntity, error)
 	Delete(userId uint) error

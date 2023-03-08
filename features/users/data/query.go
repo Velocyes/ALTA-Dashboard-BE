@@ -65,11 +65,14 @@ func (userQuery *userQuery) Insert(input users.UserEntity) (users.UserEntity, er
 	return userEntity, nil
 }
 
-func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error) {
+func (userQuery *userQuery) SelectAll(queryParams map[string]any, limit, offset int) (map[string]any, error) {
 	usersGorm, dataCount, dataResponse := []_userModel.User{}, int64(0), map[string]any{}
-	txCount := userQuery.db.Table("users").Count(&dataCount)
-	txSelect := userQuery.db.Limit(limit).Offset(offset).Find(&usersGorm)
+	txCount := userQuery.db.Table("users").Where(queryParams).Count(&dataCount)
+	txSelect := userQuery.db.Where(queryParams).Limit(limit).Offset(offset).Find(&usersGorm)
 	if txSelect.Error != nil || txCount.Error != nil {
+		if strings.Contains(txSelect.Error.Error(), "Error 1054 (42S22)") {
+			return nil, errors.New(consts.DATABASE_InvaildQueryRequest)
+		}
 		return nil, errors.New(consts.SERVER_InternalServerError)
 	}
 

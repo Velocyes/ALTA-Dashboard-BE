@@ -4,6 +4,7 @@ import (
 	"alta-dashboard-be/features/users"
 	"alta-dashboard-be/utils/consts"
 	"errors"
+	"net/url"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -64,8 +65,15 @@ func (userService *userService) Create(userInput users.UserEntity, loggedInUserR
 	return userEntity, nil
 }
 
-func (userService *userService) GetAll(limit, offset int) (map[string]any, error) {
-	dataResponse, err := userService.userData.SelectAll(limit, offset)
+func (userService *userService) GetAll(queryParams url.Values, limit, offset int) (map[string]any, error) {
+	extractedQueryParams := make(map[string]interface{})
+	for k, v := range queryParams {
+		if k != "page" && k != "limit"{
+			extractedQueryParams[k]=v[0]
+		}
+	}
+
+	dataResponse, err := userService.userData.SelectAll(extractedQueryParams, limit, offset)
 	if err != nil {
 		return map[string]any{}, err
 	}

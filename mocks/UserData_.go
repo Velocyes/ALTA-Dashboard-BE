@@ -82,25 +82,25 @@ func (_m *UserData_) Login(email string, password string) (users.UserEntity, str
 	return r0, r1, r2
 }
 
-// SelectAll provides a mock function with given fields: limit, offset
-func (_m *UserData_) SelectAll(limit int, offset int) (map[string]interface{}, error) {
-	ret := _m.Called(limit, offset)
+// SelectAll provides a mock function with given fields: queryParams, limit, offset
+func (_m *UserData_) SelectAll(queryParams map[string]interface{}, limit int, offset int) (map[string]interface{}, error) {
+	ret := _m.Called(queryParams, limit, offset)
 
 	var r0 map[string]interface{}
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int, int) (map[string]interface{}, error)); ok {
-		return rf(limit, offset)
+	if rf, ok := ret.Get(0).(func(map[string]interface{}, int, int) (map[string]interface{}, error)); ok {
+		return rf(queryParams, limit, offset)
 	}
-	if rf, ok := ret.Get(0).(func(int, int) map[string]interface{}); ok {
-		r0 = rf(limit, offset)
+	if rf, ok := ret.Get(0).(func(map[string]interface{}, int, int) map[string]interface{}); ok {
+		r0 = rf(queryParams, limit, offset)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(map[string]interface{})
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(int, int) error); ok {
-		r1 = rf(limit, offset)
+	if rf, ok := ret.Get(1).(func(map[string]interface{}, int, int) error); ok {
+		r1 = rf(queryParams, limit, offset)
 	} else {
 		r1 = ret.Error(1)
 	}

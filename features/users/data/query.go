@@ -1,11 +1,12 @@
 package data
 
 import (
-	"errors"
 	"alta-dashboard-be/features/users"
 	_userModel "alta-dashboard-be/features/users/models"
 	"alta-dashboard-be/middlewares"
 	"alta-dashboard-be/utils/consts"
+	"errors"
+	"fmt"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -85,8 +86,11 @@ func (userQuery *userQuery) SelectAll(limit, offset int) (map[string]any, error)
 
 func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
 	userGorm := _userModel.User{}
-	txSelect := userQuery.db.Find(&userGorm, userId)
+	txSelect := userQuery.db.Model(&userGorm).Where("id = ?", userId).First(&userGorm)
 	if txSelect.Error != nil {
+		if txSelect.Error == gorm.ErrRecordNotFound {
+			return users.UserEntity{}, errors.New(gorm.ErrRecordNotFound.Error())
+		}
 		return users.UserEntity{}, errors.New(consts.SERVER_InternalServerError)
 	}
 
@@ -96,30 +100,30 @@ func (userQuery *userQuery) SelectData(userId uint) (users.UserEntity, error) {
 
 func (userQuery *userQuery) UpdateData(input users.UserEntity) (users.UserEntity, error) {
 	inputedUserGorm, updatedUserGorm := EntityToGorm(input), _userModel.User{}
-	txUpdate := userQuery.db.Model(&inputedUserGorm).Updates(inputedUserGorm)
-	if txUpdate.Error != nil || txUpdate.RowsAffected == 0 {
-		if txUpdate.Error == gorm.ErrRecordNotFound {
-			return users.UserEntity{}, errors.New(gorm.ErrRecordNotFound.Error())
+	txUpdate := userQuery.db.Model(&inputedUserGorm).Updates(&inputedUserGorm)
+	if txUpdate.Error != nil {
+		if strings.Contains(txUpdate.Error.Error(), "Error 1062 (23000)") {
+			return users.UserEntity{}, errors.New(consts.USER_EmailAlreadyUsed)
 		}
 		return users.UserEntity{}, errors.New(consts.SERVER_InternalServerError)
 	}
+	if txUpdate.RowsAffected == 0 {
+		return users.UserEntity{}, errors.New(gorm.ErrRecordNotFound.Error())
+	}
 
-	userQuery.db.Model(inputedUserGorm).Find(&updatedUserGorm)
+	fmt.Println(txUpdate.RowsAffected)
+
+	userQuery.db.Find(&updatedUserGorm, "id = ?", inputedUserGorm.ID)
 	return GormToEntity(updatedUserGorm), nil
 }
 
 func (userQuery *userQuery) Delete(userId uint) error {
-	selectedUserGorm, err := userQuery.SelectData(userId)
-	if err != nil {
-		return err
-	}
-
-	txDelete := userQuery.db.Model(&selectedUserGorm).Where("id = ?", userId).Delete(&selectedUserGorm)
-	if txDelete.Error != nil || txDelete.RowsAffected == 0 {
-		if txDelete.Error == gorm.ErrRecordNotFound {
-			return errors.New(gorm.ErrRecordNotFound.Error())
-		}
+	txDelete := userQuery.db.Model(&_userModel.User{}).Where("id = ?", userId).Delete(&_userModel.User{})
+	if txDelete.Error != nil{
 		return errors.New(consts.SERVER_InternalServerError)
+	}
+	if txDelete.RowsAffected == 0 {
+		return errors.New(gorm.ErrRecordNotFound.Error())
 	}
 	return nil
 }

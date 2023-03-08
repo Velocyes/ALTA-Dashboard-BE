@@ -2,9 +2,10 @@ package service
 
 import (
 	"alta-dashboard-be/features/logs"
+	"alta-dashboard-be/utils/consts"
+	"errors"
 
 	"github.com/go-playground/validator/v10"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type logService struct {
@@ -19,16 +20,11 @@ func New(logData logs.LogDataInterface_) logs.LogServiceInterface_ {
 	}
 }
 
-func HashPassword(inputPassword string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(inputPassword), 14)
-	return string(hashedPassword), err
-}
-
 func (logService *logService) Create(logInput logs.LogEntity, loggedInUserId uint) (logs.LogEntity, error) {
 	logInput.UserID = loggedInUserId
 	err := logService.validate.Struct(logInput)
 	if err != nil {
-		return logs.LogEntity{}, err
+		return logs.LogEntity{}, errors.New(consts.VALIDATION_InvalidInput)
 	}
 
 	logEntity, err := logService.logData.Insert(logInput)

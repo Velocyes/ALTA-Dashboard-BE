@@ -35,19 +35,12 @@ func (logQuery *logQuery) SelectData(searchedMenteeId uint, limit, offset int) (
 	txCount := logQuery.db.Table("logs").Where("mentee_id = ?", searchedMenteeId).Count(&dataCount)
 	txSelect := logQuery.db.Model(&logsGorm).Where("mentee_id = ?", searchedMenteeId).Limit(limit).Offset(offset).Find(&logsGorm)
 	if txSelect.Error != nil || txCount.Error != nil {
-		if txSelect.Error == gorm.ErrRecordNotFound {
-			return map[string]any{}, errors.New(gorm.ErrRecordNotFound.Error())
-		}
 		return nil, errors.New(consts.SERVER_InternalServerError)
 	}
 
 	logEntities := ListGormToEntity(logsGorm)
-	if limit != -1 {
-		dataResponse["total_page"] = int(dataCount) / limit
-		dataResponse["page"] = (offset / limit) + 1
-		dataResponse["data"] = logEntities
-	} else {
-		dataResponse["data"] = logEntities
-	}
+	dataResponse["total_page"] = int(dataCount) / limit
+	dataResponse["page"] = (offset / limit) + 1
+	dataResponse["data"] = logEntities
 	return dataResponse, nil
 }

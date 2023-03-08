@@ -1,139 +1,88 @@
 package service
 
-// import (
-// 	"clean-arch/features/users"
-// 	"clean-arch/mocks"
-// 	"errors"
-// 	"testing"
+import (
+	"alta-dashboard-be/mocks"
+	"testing"
 
-// 	"github.com/stretchr/testify/assert"
-// )
+	"github.com/stretchr/testify/assert"
+)
+
+func TestLogin(t *testing.T) {
+	table := LoginTestTable()
+	for _, v := range table {
+		t.Run(v.Name, func(t *testing.T) {
+			//mock data
+			userDataMock := new(mocks.UserData_)
+			userDataMock.On("Login", v.Input.Email, v.Input.Password).Return(v.Output.Result, v.Output.Token, nil)
+
+			//execute
+			userService := New(userDataMock)
+			_, _, err := userService.Login(v.Input.Email, v.Input.Password)
+			if v.Output.IsError {
+				assert.NotNil(t, err)
+			} else {
+				assert.Nil(t, err)
+			}
+		})
+	}
+}
 
 // func TestCreate(t *testing.T) {
-// 	userDataMock := new(mocks.UserDataMock)
-// 	inputData := users.UserEntity{Id: 1, Name: "Joko", Email: "Joko@gmail.com", Password: "qwerty", Address: "Jakarta", Role: "User"}
+// 	table := CreateTestTable()
+// 	for _, v := range table {
+// 		t.Run(v.Name, func(t *testing.T) {
+// 			//mock data
+// 			userDataMock := new(mocks.UserData_)
+// 			userDataMock.On("Insert", v.Input.userInput).Return(v.Output.Result, nil)
 
-// 	t.Run("Failed validate", func(t *testing.T) {
-// 		inputDataCopy := inputData
-// 		inputDataCopy.Email = ""
-// 		userService := New(userDataMock)
-// 		err := userService.Create(inputDataCopy)
-// 		assert.NotNil(t, err)
-// 		userDataMock.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Failed Insert User Error", func(t *testing.T) {
-// 		userDataMock.On("Insert", inputData).Return(errors.New("error insert data")).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Create(inputData)
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, "error insert data", err.Error())
-// 		userDataMock.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Success Insert User", func(t *testing.T) {
-// 		userDataMock.On("Insert", inputData).Return(nil).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Create(inputData)
-// 		assert.Nil(t, err)
-// 		userDataMock.AssertExpectations(t)
-// 	})
-// }
-
-// func TestGetAll(t *testing.T) {
-// 	userDataMock := new(mocks.UserDataMock)
-// 	returnData := []users.UserEntity{
-// 		{Id: 1, Name: "Joko", Email: "Joko@gmail.com", Password: "qwerty", Address: "Jakarta", Role: "User"},
+// 			//execute
+// 			userService := New(userDataMock)
+// 			_, err := userService.Create(v.Input.userInput, v.Input.loggedInUserRole)
+// 			if v.Output.IsError {
+// 				assert.NotNil(t, err)
+// 			} else {
+// 				assert.Nil(t, err)
+// 			}
+// 		})
 // 	}
-
-// 	t.Run("Success Get All Users", func(t *testing.T) {
-// 		userDataMock.On("SelectAll").Return(returnData, nil).Once()
-
-// 		userService := New(userDataMock)
-// 		response, err := userService.GetAll()
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, returnData[0].Name, response[0].Name)
-// 		userDataMock.AssertExpectations(t)
-// 	})
 // }
 
-// func TestGetUser(t *testing.T) {
-// 	userDataMock := new(mocks.UserDataMock)
-// 	userId := uint(1)
-// 	returnData := users.UserEntity{
-// 		Id: 1, Name: "Joko", Email: "Joko@gmail.com", Password: "qwerty", Address: "Jakarta", Role: "User",
-// 	}
+func TestGetData(t *testing.T) {
+	table := GetDataTestTable()
+	for _, v := range table {
+		t.Run(v.Name, func(t *testing.T) {
+			//mock data
+			userDataMock := new(mocks.UserData_)
+			userDataMock.On("SelectData", v.Input.userId).Return(v.Output.Result, nil)
 
-// 	t.Run("Success Get User", func(t *testing.T) {
-// 		userDataMock.On("SelectByUserId", userId).Return(returnData, nil).Once()
+			//execute
+			userService := New(userDataMock)
+			_, err := userService.GetData(v.Input.loggedInUserId, v.Input.userId, v.Input.loggedInUserRole)
+			if v.Output.IsError {
+				assert.NotNil(t, err)
+			} else {
+				assert.Nil(t, err)
+			}
+		})
+	}
+}
 
-// 		userService := New(userDataMock)
-// 		response, err := userService.GetUser(userId)
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, returnData.Name, response.Name)
-// 		userDataMock.AssertExpectations(t)
-// 	})
-// }
+func TestRemove(t *testing.T) {
+	table := RemoveTestTable()
+	for _, v := range table {
+		t.Run(v.Name, func(t *testing.T) {
+			//mock data
+			userDataMock := new(mocks.UserData_)
+			userDataMock.On("Delete", v.Input.userId).Return(nil)
 
-// func TestModify(t *testing.T) {
-// 	userDataMock := new(mocks.UserDataMock)
-// 	userId := 1
-// 	inputData := users.UserEntity{
-// 		Id: 1, Name: "Joko", Email: "Joko@gmail.com", Password: "qwerty", Address: "Jakarta", Role: "User",
-// 	}
-
-// 	t.Run("Success Update User", func(t *testing.T) {
-// 		userDataMock.On("Update", uint(userId), inputData).Return(nil).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Modify(uint(userId), inputData)
-// 		assert.Nil(t, err)
-// 		userDataMock.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Failed Find User By ID", func(t *testing.T) {
-// 		userDataMock.On("Update", uint(userId), inputData).Return(errors.New("error select user")).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Modify(uint(userId), inputData)
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, "error select user", err.Error())
-// 		userDataMock.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Failed Update User", func(t *testing.T) {
-// 		userDataMock.On("Update", uint(userId), inputData).Return(errors.New("update error, row affected = 0")).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Modify(uint(userId), inputData)
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, "update error, row affected = 0", err.Error())
-// 		userDataMock.AssertExpectations(t)
-// 	})
-// }
-
-// func TestRemove(t *testing.T) {
-// 	userDataMock := new(mocks.UserDataMock)
-// 	userId := 1
-
-// 	t.Run("Success Delete User", func(t *testing.T) {
-// 		userDataMock.On("Delete", uint(userId)).Return(nil).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Remove(uint(userId))
-// 		assert.Nil(t, err)
-// 		userDataMock.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Failed Find User By ID", func(t *testing.T) {
-// 		userDataMock.On("Delete", uint(userId)).Return(errors.New("delete error, row affected = 0")).Once()
-
-// 		userService := New(userDataMock)
-// 		err := userService.Remove(uint(userId))
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, "delete error, row affected = 0", err.Error())
-// 		userDataMock.AssertExpectations(t)
-// 	})
-// }
+			//execute
+			userService := New(userDataMock)
+			err := userService.Remove(v.Input.loggedInUserId, v.Input.userId, v.Input.loggedInUserRole)
+			if v.Output.IsError {
+				assert.NotNil(t, err)
+			} else {
+				assert.Nil(t, err)
+			}
+		})
+	}
+}

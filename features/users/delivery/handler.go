@@ -34,6 +34,10 @@ func (userHandler *UserHandler) Login(c echo.Context) error {
 	if err != nil {
 		if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
+		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
+		} else if err.Error() == consts.USER_WrongPassword {
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_WrongPassword))
 		}
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
@@ -65,6 +69,8 @@ func (userHandler *UserHandler) Register(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
 		} else if err.Error() == consts.USER_EmptyCredentialError {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmptyCredentialError))
+		} else if err.Error() == consts.VALIDATION_InvalidInput{
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
 		} else if err.Error() == consts.USER_EmailAlreadyUsed {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmailAlreadyUsed))
 		}
@@ -108,10 +114,10 @@ func (userHandler *UserHandler) GetUserData(c echo.Context) error {
 	if err != nil {
 		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
+		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
 		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessReadUserData, entityToResponse(userEntity)))
 }
@@ -138,15 +144,17 @@ func (userHandler *UserHandler) UpdateAccount(c echo.Context) error {
 	if err != nil {
 		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
-		} else if err.Error() == consts.USER_FailedUpdate {
-			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_FailedUpdate))
+		} else if err.Error() == consts.VALIDATION_InvalidInput{
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.VALIDATION_InvalidInput))
+		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return c.JSON(http.StatusNotFound, helper.FailedResponse(gorm.ErrRecordNotFound.Error()))
+		} else if err.Error() == consts.USER_EmailAlreadyUsed {
+			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.USER_EmailAlreadyUsed))
 		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.SERVER_InternalServerError))
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 
-	return c.JSON(http.StatusNoContent, helper.SuccessWithDataResponse(consts.USER_SuccessUpdateUserData, entityToResponse(userEntity)))
+	return c.JSON(http.StatusOK, helper.SuccessWithDataResponse(consts.USER_SuccessUpdateUserData, entityToResponse(userEntity)))
 }
 
 func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
@@ -164,10 +172,10 @@ func (userHandler *UserHandler) RemoveAccount(c echo.Context) error {
 	if err != nil {
 		if err.Error() == consts.SERVER_ForbiddenRequest {
 			return c.JSON(http.StatusBadRequest, helper.FailedResponse(consts.SERVER_ForbiddenRequest))
-		} else if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
+		} else if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return c.JSON(http.StatusNotFound, helper.FailedResponse(consts.USER_UserNotFound))
 		}
-		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(consts.USER_FailedDelete))
+		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
 
 	return c.JSON(http.StatusNoContent, helper.SuccessResponse(consts.USER_SuccessDelete))

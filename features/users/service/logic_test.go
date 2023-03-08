@@ -54,11 +54,11 @@ func TestGetAll(t *testing.T) {
 		t.Run(v.Name, func(t *testing.T) {
 			//mock data
 			userDataMock := new(mocks.UserData_)
-			userDataMock.On("SelectAll", mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, nil)
+			userDataMock.On("SelectAll", mock.Anything, mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, nil)
 
 			//execute
 			userService := New(userDataMock)
-			_, err := userService.GetAll(v.Input.limit, v.Input.offset)
+			_, err := userService.GetAll(v.Input.queryParams, v.Input.limit, v.Input.offset)
 			if v.Output.IsError {
 				assert.NotNil(t, err)
 			} else {

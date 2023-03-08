@@ -16,6 +16,7 @@ type TestTable struct {
 		userInput        users.UserEntity
 		limit            int
 		offset           int
+		queryParams      map[string][]string
 	}
 	Output struct {
 		IsError bool
@@ -37,8 +38,8 @@ func LoginTestTable() []TestTable {
 				loggedInUserRole string
 				userInput        users.UserEntity
 				limit            int
-
-				offset int
+				offset           int
+				queryParams      map[string][]string
 			}{
 				Password: "qwerty",
 			},
@@ -63,6 +64,7 @@ func LoginTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				Email: "Joko@gmail.com",
 			},
@@ -87,6 +89,7 @@ func LoginTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				Email:    "joko@gmail.com",
 				Password: "qwerty",
@@ -125,6 +128,7 @@ func CreateTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_User,
 			},
@@ -148,6 +152,7 @@ func CreateTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				userInput: users.UserEntity{
@@ -175,6 +180,7 @@ func CreateTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				userInput: users.UserEntity{
@@ -202,6 +208,7 @@ func CreateTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				userInput: users.UserEntity{
@@ -229,6 +236,7 @@ func CreateTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				userInput: users.UserEntity{
@@ -271,6 +279,7 @@ func ModifyDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				userId:           1,
 				loggedInUserId:   2,
@@ -296,6 +305,7 @@ func ModifyDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				userId:           2,
 				loggedInUserId:   1,
@@ -325,6 +335,7 @@ func ModifyDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				userId:           2,
 				loggedInUserId:   1,
@@ -354,6 +365,7 @@ func ModifyDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				userId:           2,
 				loggedInUserId:   1,
@@ -383,6 +395,7 @@ func ModifyDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				userId:           2,
 				loggedInUserId:   1,
@@ -424,6 +437,7 @@ func ModifyDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				userId:           1,
 				loggedInUserId:   1,
@@ -471,9 +485,13 @@ func GetAllTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				limit:  2,
 				offset: 2,
+				queryParams: map[string][]string{
+					"role": []string{"Admin"},
+				},
 			},
 			Output: struct {
 				IsError bool
@@ -515,6 +533,7 @@ func GetDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_User,
 				loggedInUserId:   1,
@@ -540,6 +559,7 @@ func GetDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_User,
 				loggedInUserId:   1,
@@ -565,6 +585,7 @@ func GetDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				loggedInUserId:   1,
@@ -590,6 +611,7 @@ func GetDataTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				loggedInUserId:   1,
@@ -621,6 +643,7 @@ func RemoveTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_User,
 				loggedInUserId:   1,
@@ -645,6 +668,7 @@ func RemoveTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_User,
 				loggedInUserId:   1,
@@ -669,6 +693,7 @@ func RemoveTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				loggedInUserId:   1,
@@ -693,6 +718,7 @@ func RemoveTestTable() []TestTable {
 				userInput        users.UserEntity
 				limit            int
 				offset           int
+				queryParams      map[string][]string
 			}{
 				loggedInUserRole: consts.E_USER_Admin,
 				loggedInUserId:   1,

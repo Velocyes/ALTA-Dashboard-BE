@@ -20,7 +20,7 @@ type Mentee struct {
 	ClassID   int       `gorm:"not null;foreignKey"`
 	Class     cm.Class  `gorm:"foreignKey:ClassID;references:ID"`
 	Logs      []lm.Log
-	Status    string `gorm:"type:enum('None', 'Interview', 'Join Class', 'Continue Unit 2', 'Continue Unit 3', 'Eliminated', 'Placement', 'Repeat Unit 1', 'Repeat Unit 2', 'Repeat Unit 3');default:'None';not null"`
+	Status    string `gorm:"not null;type:enum('None', 'Join Class', 'Continue Unit 1','Continue Unit 2', 'Continue Unit 3', 'Eliminated', 'Interview', 'Graduated', 'Placement', 'Repeat Unit 1', 'Repeat Unit 2', 'Repeat Unit 3')"`
 }
 
 type Emergency struct {

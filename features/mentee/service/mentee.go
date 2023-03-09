@@ -11,6 +11,8 @@ type MenteeService struct {
 
 // Create implements mentee.MenteeService_
 func (u *MenteeService) Create(userID int, mentee mentee.MenteeCore) error {
+	//set mentee status to join class
+	mentee.Status = "Join Class"
 	//validate userID
 	if userID <= 0 {
 		return errors.New("invalid userID")

@@ -14,6 +14,7 @@ func convertToModels(m *mentee.MenteeCore) (models.Mentee, models.Emergency, mod
 		Phone:    m.Phone,
 		Telegram: m.Telegram,
 		ClassID:  m.ClassID,
+		Status:   m.Status,
 	}
 
 	emergency := models.Emergency{
@@ -52,6 +53,7 @@ func convertToCore(u *models.Mentee) mentee.MenteeCore {
 		EmergencyStatus: u.Emergency.Status,
 		EducationType:   u.Education.Type,
 		EducationMajor:  u.Education.Major,
+		Status:          u.Status,
 	}
 
 	//set graduation date

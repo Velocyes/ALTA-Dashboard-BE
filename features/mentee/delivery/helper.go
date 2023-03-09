@@ -19,6 +19,7 @@ func convertToCore(u *mentee.MenteeRequest) (mentee.MenteeCore, error) {
 		EducationType:   u.EducationType,
 		EducationMajor:  u.EducationMajor,
 		ClassID:         u.ClassID,
+		Status:          u.Status,
 	}
 	if u.EducationGradDate != "" {
 		education, err := time.Parse("2006-01-02", u.EducationGradDate)
@@ -44,6 +45,7 @@ func convertToResponse(u *mentee.MenteeCore) mentee.MenteeResponse {
 		EmergencyStatus: u.EmergencyStatus,
 		EducationType:   u.EducationType,
 		EducationMajor:  u.EducationMajor,
+		Status:          u.Status,
 	}
 
 	if u.EducationGradDate != nil {

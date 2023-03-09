@@ -627,6 +627,39 @@ func UpdateTestTable() []TestTable {
 	tname := "test update mentee"
 	return []TestTable{
 		{
+			Name: tname + " status invalid",
+			Input: struct {
+				ID     int
+				UserID int
+				Page   int
+				Limit  int
+				Mentee mentee.MenteeCore
+			}{
+				ID:     1,
+				UserID: 2,
+				Mentee: mentee.MenteeCore{
+					FullName:          "ahmad",
+					Email:             "ahmad@ahmad.com",
+					Address:           "jl ahmad no 15",
+					Phone:             "088888888888",
+					Telegram:          "ahmada123",
+					EmergencyName:     "udin",
+					EmergencyStatus:   "Keponakan",
+					EmergencyPhone:    "088888888888",
+					EducationType:     "IT",
+					EducationMajor:    "electrical engineering",
+					EducationGradDate: nil,
+					Status:            "sadadio",
+				},
+			},
+			Output: struct {
+				IsError bool
+				Result  interface{}
+			}{
+				IsError: true,
+			},
+		},
+		{
 			Name: tname + " null graduation date",
 			Input: struct {
 				ID     int

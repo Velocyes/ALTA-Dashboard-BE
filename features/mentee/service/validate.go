@@ -76,7 +76,24 @@ func validate(u *mentee.MenteeCore) error {
 		return errors.New("invalid email format")
 	}
 
+	//validate status if exists
+	if u.Status != "" {
+		err = validateENUM(u.Status, "status", "Interview", "Continue Unit 1", "Continue Unit 2", "Continue Unit 3", "Graduated", "Eliminated", "Join Class", "Placement", "Repeat Unit 1", "Repeat Unit 2", "Repeat Unit 3")
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
+}
+
+func validateENUM(value string, name string, expected ...string) error {
+	for _, v := range expected {
+		if v == value {
+			return nil
+		}
+	}
+	return fmt.Errorf("%s only accept enum of %v", name, expected)
 }
 
 func validateEmptyString(val map[string]string) error {

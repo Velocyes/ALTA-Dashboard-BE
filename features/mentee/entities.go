@@ -21,6 +21,7 @@ type MenteeCore struct {
 	EducationMajor    string
 	EducationGradDate *time.Time //nullable
 	ClassID           int
+	Status            string `json:"status"`
 }
 
 type MenteeRequest struct {
@@ -36,6 +37,7 @@ type MenteeRequest struct {
 	EducationMajor    string `json:"education_major"`
 	EducationGradDate string `json:"education_grad_date"`
 	ClassID           int    `json:"class_id"`
+	Status            string `json:"status"`
 }
 
 type MenteeResponse struct {
@@ -53,6 +55,7 @@ type MenteeResponse struct {
 	EducationMajor    string `json:"education_major"`
 	EducationGradDate string `json:"education_grad_date"`
 	ClassID           int    `json:"class_id"`
+	Status            string `json:"status"`
 }
 
 //go:generate mockery --name MenteeData_ --output ../../mocks

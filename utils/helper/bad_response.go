@@ -28,8 +28,11 @@ func ValidateUserFailedResponse(c echo.Context, err error) (codeStatus int, fail
 func ValidateLogFailedResponse(c echo.Context, err error) (codeStatus int, failedMessage string) {
 	if err.Error() == consts.VALIDATION_InvalidInput {
 		return http.StatusBadRequest, consts.VALIDATION_InvalidInput
+	} else if err.Error() == consts.LOG_InvalidParamStatus {
+		return http.StatusBadRequest, consts.LOG_InvalidParamStatus
 	} else if err.Error() == consts.LOG_MenteeNotExisted {
 		return http.StatusBadRequest, consts.LOG_MenteeNotExisted
 	}
+	
 	return http.StatusInternalServerError, err.Error()
 }

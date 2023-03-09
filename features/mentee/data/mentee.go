@@ -99,7 +99,7 @@ func (u *MenteeData) GetAll(page int, limit int) ([]mentee.MenteeCore, error) {
 // GetOne implements mentee.MenteeData_
 func (u *MenteeData) GetOne(id int) (mentee.MenteeCore, error) {
 	mdl := models.Mentee{}
-	tx := u.db.Where("id = ?", id).First(&mdl)
+	tx := u.db.Where("id = ?", id).Preload("Emergency").Preload("Education").First(&mdl)
 	if tx.Error != nil {
 		return mentee.MenteeCore{}, errors.New(consts.DATABASE_internal_error)
 	}

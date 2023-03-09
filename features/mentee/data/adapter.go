@@ -54,6 +54,7 @@ func convertToCore(u *models.Mentee) mentee.MenteeCore {
 		EducationType:   u.Education.Type,
 		EducationMajor:  u.Education.Major,
 		Status:          u.Status,
+		Phone:		u.Phone,
 	}
 
 	//set graduation date

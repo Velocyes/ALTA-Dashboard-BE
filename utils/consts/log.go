@@ -25,4 +25,6 @@ const (
 // Response failed
 const (
 	LOG_MenteeNotExisted string = "mentee not existed"
+
+	LOG_InvalidParamStatus string = "invalid param status"
 )

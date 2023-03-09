@@ -48,12 +48,12 @@ type MenteeResponse struct {
 	Address           string `json:"address"`
 	Phone             string `json:"phone"`
 	Telegram          string `json:"telegram"`
-	EmergencyName     string `json:"emergency_name"`
-	EmergencyPhone    string `json:"emergency_phone"`
-	EmergencyStatus   string `json:"emergency_status"`
-	EducationType     string `json:"education_type"`
-	EducationMajor    string `json:"education_major"`
-	EducationGradDate string `json:"education_grad_date"`
+	EmergencyName     string `json:"emergency_name,omitempty"`
+	EmergencyPhone    string `json:"emergency_phone,omitempty"`
+	EmergencyStatus   string `json:"emergency_status,omitempty"`
+	EducationType     string `json:"education_type,omitempty"`
+	EducationMajor    string `json:"education_major,omitempty"`
+	EducationGradDate string `json:"education_grad_date,omitempty"`
 	ClassID           int    `json:"class_id"`
 	Status            string `json:"status"`
 }

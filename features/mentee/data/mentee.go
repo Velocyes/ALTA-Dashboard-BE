@@ -13,6 +13,17 @@ type MenteeData struct {
 	db *gorm.DB
 }
 
+// GetAllFilteredByStatus implements mentee.MenteeData_
+func (u *MenteeData) GetAllFilteredByStatus(page int, limit int, status string) ([]mentee.MenteeCore, error) {
+	mdl := []models.Mentee{}
+	limit, offset := helper.LimitOffsetConvert(page, limit)
+	tx := u.db.Where("status = ?", status).Offset(offset).Limit(limit).Find(&mdl)
+	if tx.Error != nil {
+		return nil, errors.New("error in database")
+	}
+	return convertToCoreList(mdl), nil
+}
+
 // Create implements mentee.MenteeData_
 func (u *MenteeData) Create(mentee mentee.MenteeCore) error {
 	//start transaction

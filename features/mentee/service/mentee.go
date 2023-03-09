@@ -3,6 +3,7 @@ package service
 import (
 	"alta-dashboard-be/features/mentee"
 	"errors"
+	"net/url"
 )
 
 type MenteeService struct {
@@ -35,10 +36,26 @@ func (u *MenteeService) Delete(userID int, id int) error {
 }
 
 // GetAll implements mentee.MenteeService_
-func (u *MenteeService) GetAll(page int, limit int) ([]mentee.MenteeCore, error) {
+func (u *MenteeService) GetAll(page int, limit int, status string) ([]mentee.MenteeCore, error) {
 	//validate page and limit
 	if page <= 0 || limit <= 0 {
 		return nil, errors.New("invalid page or limit given")
+	}
+	//if status is not nil, use getallfilteredbystatus
+	if status != "" {
+		//decode url query params
+		decodedValue, err := url.QueryUnescape(status)
+		if err != nil {
+			return nil, errors.New("url encoded invalid")
+		}
+		//set status = devocedValue
+		status = decodedValue
+		//validate
+		err = validateStatus(status)
+		if err != nil {
+			return nil, err
+		}
+		return u.data.GetAllFilteredByStatus(page, limit, status)
 	}
 	return u.data.GetAll(page, limit)
 }

@@ -75,10 +75,11 @@ func TestGetAll(t *testing.T) {
 			//mock data
 			menteeData := new(mocks.MenteeData_)
 			menteeData.On("GetAll", mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, nil)
+			menteeData.On("GetAllFilteredByStatus", mock.AnythingOfType("int"), mock.AnythingOfType("int"), mock.AnythingOfType("string")).Return(v.Output.Result, nil)
 
 			//execute
 			service := New(menteeData)
-			_, err := service.GetAll(v.Input.Page, v.Input.Limit)
+			_, err := service.GetAll(v.Input.Page, v.Input.Limit, v.Input.Status)
 			if v.Output.IsError {
 				assert.NotNil(t, err)
 			} else {

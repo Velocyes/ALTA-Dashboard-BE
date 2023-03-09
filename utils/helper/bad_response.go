@@ -9,8 +9,8 @@ import (
 )
 
 func ValidateUserFailedResponse(c echo.Context, err error) (codeStatus int, failedMessage string) {
-	if err.Error() == consts.DATABASE_InvaildQueryParameter {
-		return http.StatusBadRequest, consts.DATABASE_InvaildQueryParameter
+	if err.Error() == consts.DATABASE_InvalidQueryParameter {
+		return http.StatusBadRequest, consts.DATABASE_InvalidQueryParameter
 	} else if err.Error() == consts.VALIDATION_InvalidInput {
 		return http.StatusBadRequest, consts.VALIDATION_InvalidInput
 	} else if err.Error() == consts.SERVER_ForbiddenRequest {

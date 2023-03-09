@@ -3,6 +3,7 @@ package data
 import (
 	"alta-dashboard-be/features/logs"
 	_logModel "alta-dashboard-be/features/logs/models"
+	_menteeModel "alta-dashboard-be/features/mentee/models"
 	"alta-dashboard-be/utils/consts"
 	"errors"
 	"math"
@@ -23,12 +24,32 @@ func New(db *gorm.DB) logs.LogDataInterface_ {
 
 func (logQuery *logQuery) Insert(input logs.LogEntity) (logs.LogEntity, error) {
 	logGorm := EntityToGorm(input)
-	txInsert := logQuery.db.Create(&logGorm)
-	if txInsert.Error != nil || txInsert.RowsAffected == 0{
-		if strings.Contains(txInsert.Error.Error(), "Error 1452 (23000)") {
-			return logs.LogEntity{}, errors.New(consts.LOG_MenteeNotExisted)
+
+	txTransaction := logQuery.db.Begin()
+	if txTransaction.Error != nil {
+		txTransaction.Rollback()
+		return logs.LogEntity{}, errors.New(txTransaction.Error.Error())
+	}
+
+	tx := txTransaction.Model(&_menteeModel.Mentee{}).Where("id = ?", input.MenteeID).Update("status", input.Status)
+	if tx.Error != nil || tx.RowsAffected == 0 {
+		txTransaction.Rollback()
+		if strings.Contains(tx.Error.Error(), "Error 1265 (01000)") {
+			return logs.LogEntity{}, errors.New(consts.LOG_InvalidParamStatus)
 		}
 		return logs.LogEntity{}, errors.New(consts.SERVER_InternalServerError)
+	}
+
+	tx = txTransaction.Create(&logGorm)
+	if tx.Error != nil || tx.RowsAffected == 0 {
+		txTransaction.Rollback()
+		return logs.LogEntity{}, errors.New(txTransaction.Error.Error())
+	}
+
+	txTransaction = txTransaction.Commit()
+	if txTransaction.Error != nil {
+		txTransaction.Rollback()
+		return logs.LogEntity{}, errors.New(txTransaction.Error.Error())
 	}
 
 	logEntity := GormToEntity(logGorm)
@@ -44,7 +65,7 @@ func (logQuery *logQuery) SelectData(searchedMenteeId uint, limit, offset int) (
 	}
 
 	logEntities := ListGormToEntity(logsGorm)
-	dataResponse["total_page"] = math.Round(float64(dataCount)/float64(int64(limit)))
+	dataResponse["total_page"] = math.Round(float64(dataCount) / float64(int64(limit)))
 	dataResponse["page"] = (offset / limit) + 1
 	dataResponse["data"] = logEntities
 	return dataResponse, nil

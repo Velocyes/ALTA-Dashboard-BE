@@ -33,6 +33,5 @@ func ValidateLogFailedResponse(c echo.Context, err error) (codeStatus int, faile
 	} else if err.Error() == consts.LOG_MenteeNotExisted {
 		return http.StatusBadRequest, consts.LOG_MenteeNotExisted
 	}
-	
 	return http.StatusInternalServerError, err.Error()
 }

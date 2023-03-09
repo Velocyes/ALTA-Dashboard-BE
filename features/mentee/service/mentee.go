@@ -2,7 +2,9 @@ package service
 
 import (
 	"alta-dashboard-be/features/mentee"
+	"alta-dashboard-be/utils/consts"
 	"errors"
+	"net/url"
 )
 
 type MenteeService struct {
@@ -15,7 +17,7 @@ func (u *MenteeService) Create(userID int, mentee mentee.MenteeCore) error {
 	mentee.Status = "Join Class"
 	//validate userID
 	if userID <= 0 {
-		return errors.New("invalid userID")
+		return errors.New(consts.VALIDATION_userID)
 	}
 	//validate
 	err := validate(&mentee)
@@ -29,16 +31,32 @@ func (u *MenteeService) Create(userID int, mentee mentee.MenteeCore) error {
 func (u *MenteeService) Delete(userID int, id int) error {
 	//validate userID or id
 	if userID <= 0 || id <= 0 {
-		return errors.New("invalid userID or id")
+		return errors.New(consts.VALIDATION_id_userID)
 	}
 	return u.data.Delete(id)
 }
 
 // GetAll implements mentee.MenteeService_
-func (u *MenteeService) GetAll(page int, limit int) ([]mentee.MenteeCore, error) {
+func (u *MenteeService) GetAll(page int, limit int, status string) ([]mentee.MenteeCore, error) {
 	//validate page and limit
 	if page <= 0 || limit <= 0 {
-		return nil, errors.New("invalid page or limit given")
+		return nil, errors.New(consts.VALIDATION_page_limit)
+	}
+	//if status is not nil, use getallfilteredbystatus
+	if status != "" {
+		//decode url query params
+		decodedValue, err := url.QueryUnescape(status)
+		if err != nil {
+			return nil, errors.New("url encoded of status is invalid")
+		}
+		//set status = devocedValue
+		status = decodedValue
+		//validate
+		err = validateStatus(status)
+		if err != nil {
+			return nil, err
+		}
+		return u.data.GetAllFilteredByStatus(page, limit, status)
 	}
 	return u.data.GetAll(page, limit)
 }
@@ -47,7 +65,7 @@ func (u *MenteeService) GetAll(page int, limit int) ([]mentee.MenteeCore, error)
 func (u *MenteeService) GetOne(id int) (mentee.MenteeCore, error) {
 	//validate id
 	if id <= 0 {
-		return mentee.MenteeCore{}, errors.New("invalid id")
+		return mentee.MenteeCore{}, errors.New(consts.VALIDATION_id)
 	}
 	return u.data.GetOne(id)
 }
@@ -56,7 +74,7 @@ func (u *MenteeService) GetOne(id int) (mentee.MenteeCore, error) {
 func (u *MenteeService) Update(userID int, id int, mentee mentee.MenteeCore) error {
 	//validate userID or id
 	if userID <= 0 || id <= 0 {
-		return errors.New("invalid userID or id")
+		return errors.New(consts.VALIDATION_id_userID)
 	}
 	//validate
 	err := validate(&mentee)

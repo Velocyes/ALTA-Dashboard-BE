@@ -69,8 +69,11 @@ func (u *MenteeDelivery) GetAll(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, helper.FailedResponse(err.Error()))
 	}
 
+	//get status from query param
+	status := c.QueryParam("status")
+
 	//get all data
-	data, err := u.service.GetAll(page, limit)
+	data, err := u.service.GetAll(page, limit, status)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}

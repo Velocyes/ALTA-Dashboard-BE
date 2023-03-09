@@ -67,6 +67,32 @@ func (_m *MenteeData_) GetAll(page int, limit int) ([]mentee.MenteeCore, error) 
 	return r0, r1
 }
 
+// GetAllFilteredByStatus provides a mock function with given fields: page, limit, status
+func (_m *MenteeData_) GetAllFilteredByStatus(page int, limit int, status string) ([]mentee.MenteeCore, error) {
+	ret := _m.Called(page, limit, status)
+
+	var r0 []mentee.MenteeCore
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int, int, string) ([]mentee.MenteeCore, error)); ok {
+		return rf(page, limit, status)
+	}
+	if rf, ok := ret.Get(0).(func(int, int, string) []mentee.MenteeCore); ok {
+		r0 = rf(page, limit, status)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]mentee.MenteeCore)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int, int, string) error); ok {
+		r1 = rf(page, limit, status)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetOne provides a mock function with given fields: id
 func (_m *MenteeData_) GetOne(id int) (mentee.MenteeCore, error) {
 	ret := _m.Called(id)

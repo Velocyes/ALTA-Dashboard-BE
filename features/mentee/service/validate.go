@@ -78,13 +78,17 @@ func validate(u *mentee.MenteeCore) error {
 
 	//validate status if exists
 	if u.Status != "" {
-		err = validateENUM(u.Status, "status", "Interview", "Continue Unit 1", "Continue Unit 2", "Continue Unit 3", "Graduated", "Eliminated", "Join Class", "Placement", "Repeat Unit 1", "Repeat Unit 2", "Repeat Unit 3")
+		err = validateStatus(u.Status)
 		if err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+func validateStatus(status string) error {
+	return validateENUM(status, "status", "Interview", "Continue Unit 1", "Continue Unit 2", "Continue Unit 3", "Graduated", "Eliminated", "Join Class", "Placement", "Repeat Unit 1", "Repeat Unit 2", "Repeat Unit 3")
 }
 
 func validateENUM(value string, name string, expected ...string) error {

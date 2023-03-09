@@ -12,6 +12,7 @@ type TestTable struct {
 		UserID int
 		Page   int
 		Limit  int
+		Status string
 		Mentee mentee.MenteeCore
 	}
 	Output struct {
@@ -35,6 +36,7 @@ func GetOneTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID: 0,
@@ -69,6 +71,7 @@ func GetOneTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID: 1,
@@ -109,6 +112,7 @@ func GetAllTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				Page:  0,
@@ -145,6 +149,7 @@ func GetAllTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				Page:  2,
@@ -181,10 +186,49 @@ func GetAllTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				Page:  1,
 				Limit: 5,
+			},
+			Output: struct {
+				IsError bool
+				Result  interface{}
+			}{
+				IsError: false,
+				Result: []mentee.MenteeCore{
+					{
+						ID:                1,
+						CreatedAt:         time.Now(),
+						FullName:          "ahmad",
+						Email:             "ahmad@ahmad.com",
+						Address:           "jl ahmad no 15",
+						Phone:             "088888888888",
+						Telegram:          "ahmada123",
+						EmergencyName:     "udin",
+						EmergencyStatus:   "Keponakan",
+						EmergencyPhone:    "088888888888",
+						EducationType:     "IT",
+						EducationMajor:    "electrical engineering",
+						EducationGradDate: pastTime(),
+					},
+				},
+			},
+		},
+		{
+			Name: tname + " expect success with filtered status",
+			Input: struct {
+				ID     int
+				UserID int
+				Page   int
+				Limit  int
+				Status string
+				Mentee mentee.MenteeCore
+			}{
+				Page:   1,
+				Limit:  5,
+				Status: "Join%20Class",
 			},
 			Output: struct {
 				IsError bool
@@ -224,6 +268,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -255,6 +300,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -286,6 +332,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 0,
@@ -317,6 +364,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -348,6 +396,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -379,6 +428,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -410,6 +460,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -441,6 +492,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -472,6 +524,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -503,6 +556,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -534,6 +588,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -565,6 +620,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -596,6 +652,7 @@ func CreateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 2,
@@ -633,6 +690,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -666,6 +724,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -698,6 +757,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -730,6 +790,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -762,6 +823,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -794,6 +856,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -826,6 +889,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -858,6 +922,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -890,6 +955,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -922,6 +988,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -954,6 +1021,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -986,6 +1054,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -1018,6 +1087,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -1050,6 +1120,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     1,
@@ -1082,6 +1153,7 @@ func UpdateTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				ID:     0,
@@ -1120,6 +1192,7 @@ func DeleteTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 0,
@@ -1139,6 +1212,7 @@ func DeleteTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 1,
@@ -1158,6 +1232,7 @@ func DeleteTestTable() []TestTable {
 				UserID int
 				Page   int
 				Limit  int
+				Status string
 				Mentee mentee.MenteeCore
 			}{
 				UserID: 1,

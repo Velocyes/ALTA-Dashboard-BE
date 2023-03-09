@@ -200,7 +200,7 @@ func TestGetAll(t *testing.T) {
 			jwtMid.On("ExtractToken", mock.Anything).Return(1, "admin", nil)
 			//mock service
 			service := new(mocks.MenteeService_)
-			service.On("GetAll", mock.AnythingOfType("int"), mock.AnythingOfType("int")).Return(v.Output.Result, nil)
+			service.On("GetAll", mock.AnythingOfType("int"), mock.AnythingOfType("int"), mock.AnythingOfType("string")).Return(v.Output.Result, nil)
 
 			//create new echo context
 			req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("%s?page=%v&limit=%v", BASE_URL, v.Input.Page, v.Input.Limit), nil)

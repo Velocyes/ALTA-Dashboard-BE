@@ -3,6 +3,7 @@ package data
 import (
 	"alta-dashboard-be/features/class"
 	"alta-dashboard-be/features/class/models"
+	"alta-dashboard-be/utils/consts"
 	"alta-dashboard-be/utils/helper"
 	"errors"
 
@@ -18,7 +19,7 @@ func (u *ClassData) Create(class class.ClassCore) error {
 	mdl := convertToModel(&class)
 	tx := u.db.Create(&mdl)
 	if tx.Error != nil || tx.RowsAffected == 0 {
-		return errors.New("error in database")
+		return errors.New(consts.DATABASE_internal_error)
 	}
 	return nil
 }
@@ -28,7 +29,7 @@ func (u *ClassData) Delete(id int) error {
 	var mdl models.Class
 	tx := u.db.Where("id = ?", id).Delete(&mdl)
 	if tx.Error != nil || tx.RowsAffected == 0 {
-		return errors.New("error in database")
+		return errors.New(consts.DATABASE_internal_error)
 	}
 	return nil
 }
@@ -39,7 +40,7 @@ func (u *ClassData) GetAll(page int, limit int) ([]class.ClassCore, error) {
 	limit, offset := helper.LimitOffsetConvert(page, limit)
 	tx := u.db.Offset(offset).Limit(limit).Find(&mdl)
 	if tx.Error != nil {
-		return nil, errors.New("error in database")
+		return nil, errors.New(consts.DATABASE_internal_error)
 	}
 	return convertToCoreList(mdl), nil
 }
@@ -49,7 +50,7 @@ func (u *ClassData) GetOne(id int) (class.ClassCore, error) {
 	mdl := models.Class{}
 	tx := u.db.Where("id = ?", id).First(&mdl)
 	if tx.Error != nil {
-		return class.ClassCore{}, errors.New("error in database")
+		return class.ClassCore{}, errors.New(consts.DATABASE_internal_error)
 	}
 	return convertToCore(&mdl), nil
 }
@@ -59,7 +60,7 @@ func (u *ClassData) Update(id int, class class.ClassCore) error {
 	mdl := convertToModel(&class)
 	tx := u.db.Where("id = ?", id).Updates(&mdl)
 	if tx.Error != nil || tx.RowsAffected == 0 {
-		return errors.New("error in database")
+		return errors.New(consts.DATABASE_internal_error)
 	}
 	return nil
 }

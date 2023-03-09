@@ -62,6 +62,7 @@ type MenteeResponse struct {
 type MenteeData_ interface {
 	Create(mentee MenteeCore) error
 	GetAll(page int, limit int) ([]MenteeCore, error)
+	GetAllFilteredByStatus(page int, limit int, status string) ([]MenteeCore, error)
 	GetOne(id int) (MenteeCore, error)
 	Update(id int, mentee MenteeCore) error
 	Delete(id int) error
@@ -70,7 +71,7 @@ type MenteeData_ interface {
 //go:generate mockery --name MenteeService_ --output ../../mocks
 type MenteeService_ interface {
 	Create(userID int, mentee MenteeCore) error
-	GetAll(page int, limit int) ([]MenteeCore, error)
+	GetAll(page int, limit int, status string) ([]MenteeCore, error)
 	GetOne(id int) (MenteeCore, error)
 	Update(userID int, id int, mentee MenteeCore) error
 	Delete(userID int, id int) error

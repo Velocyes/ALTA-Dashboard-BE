@@ -2,6 +2,7 @@ package service
 
 import (
 	"alta-dashboard-be/features/class"
+	"alta-dashboard-be/utils/consts"
 	"errors"
 )
 
@@ -13,7 +14,7 @@ type ClassService struct {
 func (u *ClassService) Create(userID int, class class.ClassCore) error {
 	//validate userID
 	if userID <= 0 {
-		return errors.New("invalid UserID")
+		return errors.New(consts.VALIDATION_userID)
 	}
 	//set userID as userID from jwt
 	class.UserID = userID
@@ -29,7 +30,7 @@ func (u *ClassService) Create(userID int, class class.ClassCore) error {
 func (u *ClassService) Delete(userID int, id int) error {
 	//validate UserID
 	if userID <= 0 || id <= 0 {
-		return errors.New("invalid id or userID")
+		return errors.New(consts.VALIDATION_id_userID)
 	}
 	return u.data.Delete(id)
 }
@@ -38,7 +39,7 @@ func (u *ClassService) Delete(userID int, id int) error {
 func (u *ClassService) GetAll(page int, limit int) ([]class.ClassCore, error) {
 	//validate page and limit
 	if page <= 0 || limit <= 0 {
-		return nil, errors.New("invalid page or limit query params")
+		return nil, errors.New(consts.VALIDATION_page_limit)
 	}
 	return u.data.GetAll(page, limit)
 }
@@ -47,7 +48,7 @@ func (u *ClassService) GetAll(page int, limit int) ([]class.ClassCore, error) {
 func (u *ClassService) GetOne(id int) (class.ClassCore, error) {
 	//validate id
 	if id <= 0 {
-		return class.ClassCore{}, errors.New("invalid id")
+		return class.ClassCore{}, errors.New(consts.VALIDATION_id)
 	}
 	return u.data.GetOne(id)
 }
@@ -56,7 +57,7 @@ func (u *ClassService) GetOne(id int) (class.ClassCore, error) {
 func (u *ClassService) Update(userID int, id int, class class.ClassCore) error {
 	//validate userID
 	if userID <= 0 || id <= 0 {
-		return errors.New("invalid id or userID")
+		return errors.New(consts.VALIDATION_id_userID)
 	}
 	//set userID from JWT
 	class.UserID = userID

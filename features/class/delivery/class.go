@@ -61,7 +61,7 @@ func (u *ClassDelivery) Delete(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.FailedResponse(err.Error()))
 	}
-	return c.JSON(http.StatusOK, helper.SuccessResponse("class created"))
+	return c.JSON(http.StatusOK, helper.SuccessResponse("class deleted"))
 }
 
 // GetAll implements class.ClassDelivery_

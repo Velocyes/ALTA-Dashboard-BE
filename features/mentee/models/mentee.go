@@ -36,5 +36,3 @@ type Education struct {
 	Major          string       `gorm:"type:varchar(50);not null"`
 	GraduationDate sql.NullTime `gorm:"type:date"`
 }
-
-enum('Continue Unit 1','Continue Section 2','Continue Section 3','Eliminated','Interview','Graduated','Placement','Repeat Unit 1','Repeat Unit 2','Repeat Unit 3')

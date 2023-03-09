@@ -46,6 +46,7 @@ func convertToResponse(u *mentee.MenteeCore) mentee.MenteeResponse {
 		EducationType:   u.EducationType,
 		EducationMajor:  u.EducationMajor,
 		Status:          u.Status,
+		ClassID:         u.ClassID,
 	}
 
 	if u.EducationGradDate != nil {

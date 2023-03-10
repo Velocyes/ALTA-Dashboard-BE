@@ -89,7 +89,7 @@ func (u *MenteeData) Delete(id int) error {
 func (u *MenteeData) GetAll(page int, limit int) ([]mentee.MenteeCore, error) {
 	mdl := []models.Mentee{}
 	limit, offset := helper.LimitOffsetConvert(page, limit)
-	tx := u.db.Offset(offset).Limit(limit).Find(&mdl)
+	tx := u.db.Offset(offset).Limit(limit).Preload("Education").Find(&mdl)
 	if tx.Error != nil {
 		return nil, errors.New(consts.DATABASE_internal_error)
 	}

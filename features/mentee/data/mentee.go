@@ -118,8 +118,21 @@ func (u *MenteeData) Update(id int, mentee mentee.MenteeCore) error {
 	//convert core to models
 	m, emergency, edu := convertToModels(&mentee)
 
+	//select mentee,
+	var current models.Mentee
+	txU := tx.Where("id = ?", id).First(&current)
+	if txU.Error != nil || txU.RowsAffected == 0 {
+		tx.Rollback()
+		return errors.New(consts.DATABASE_internal_error)
+	}
+
+	//if email equal then set to empty string
+	if current.Email == m.Email {
+		m.Email = ""
+	}
+
 	//update to mentee
-	txU := tx.Where("id = ?", id).Updates(&m)
+	txU = tx.Where("id = ?", id).Updates(&m)
 	if txU.Error != nil || txU.RowsAffected == 0 {
 		tx.Rollback()
 		return errors.New(consts.DATABASE_internal_error)

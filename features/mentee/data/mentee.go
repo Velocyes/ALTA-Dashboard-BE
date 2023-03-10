@@ -18,7 +18,7 @@ type MenteeData struct {
 func (u *MenteeData) GetAllFilteredByStatus(page int, limit int, status string) ([]mentee.MenteeCore, error) {
 	mdl := []models.Mentee{}
 	limit, offset := helper.LimitOffsetConvert(page, limit)
-	tx := u.db.Where("status = ?", status).Offset(offset).Limit(limit).Find(&mdl)
+	tx := u.db.Where("status = ?", status).Offset(offset).Limit(limit).Preload("Education").Find(&mdl)
 	if tx.Error != nil {
 		return nil, errors.New(consts.DATABASE_internal_error)
 	}
